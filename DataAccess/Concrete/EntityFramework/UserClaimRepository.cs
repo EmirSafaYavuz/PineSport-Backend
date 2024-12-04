@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.DataAccess.EntityFramework;
@@ -24,6 +25,20 @@ namespace DataAccess.Concrete.EntityFramework
             Context.UserClaims.RemoveRange(DbClaimList);
             await Context.UserClaims.AddRangeAsync(userClaims);
             return userClaims;
+        }
+
+        public async Task<OperationClaim> GetClaimByNameAsync(string claimName)
+        {
+            // Claim adı boş veya null ise hata
+            if (string.IsNullOrWhiteSpace(claimName))
+            {
+                throw new ArgumentException("Claim adı boş olamaz.", nameof(claimName));
+            }
+
+            // OperationClaims tablosunda verilen isimle eşleşen claim'i ara
+            var claim = await Context.OperationClaims.FirstOrDefaultAsync(c => c.Name == claimName);
+
+            return claim;
         }
 
         public async Task<IEnumerable<SelectionItem>> GetUserClaimSelectedList(int userId)

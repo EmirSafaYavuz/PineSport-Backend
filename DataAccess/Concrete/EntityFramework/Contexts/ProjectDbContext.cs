@@ -27,6 +27,12 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
             AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         }
 
+        public ProjectDbContext()
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+        }
+
         /// <summary>
         /// Let's also implement the general version.
         /// </summary>

@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using Business.DependencyResolvers.Autofac;
 using Core.DependencyResolvers;
+using DataAccess.Concrete.EntityFramework.Contexts;
 using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -99,6 +100,7 @@ if (taskSchedulerConfig.Enabled)
 
 var coreModule = new CoreModule();
 builder.Services.AddDependencyResolvers(builder.Configuration, new ICoreModule[] { coreModule });
+builder.Services.AddDbContext<ProjectDbContext>();
 
 var app = builder.Build();
 

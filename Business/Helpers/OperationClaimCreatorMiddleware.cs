@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
-using Core.Utilities.IoC;
-using MediatR;
+using Business.Fakes.Handlers.OperationClaims;
+using Business.Fakes.Handlers.User;
+using Business.Fakes.Handlers.UserClaims;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,44 +15,101 @@ namespace Business.Helpers
     {
         public static async Task UseDbOperationClaimCreator(this IApplicationBuilder app)
         {
-            var mediator = ServiceTool.ServiceProvider.GetService<IMediator>();
-            /*
-            foreach (var operationName in GetOperationNames())
+            using var scope = app.ApplicationServices.CreateScope();
+
+            var internalOperationClaimService = scope.ServiceProvider.GetService<IInternalOperationClaimService>();
+            var internalUserService = scope.ServiceProvider.GetService<IInternalUserService>();
+            var internalUserClaimService = scope.ServiceProvider.GetService<IInternalUserClaimService>();
+
+            if (internalOperationClaimService == null || internalUserService == null || internalUserClaimService == null)
             {
-                await mediator.Send(new CreateOperationClaimInternalCommand
-                {
-                    ClaimName = operationName
-                });
+                throw new Exception("Required services are not registered.");
             }
 
-            var operationClaims = (await mediator.Send(new GetOperationClaimsInternalQuery())).Data;
-            var user = await mediator.Send(new RegisterUserInternalCommand
+            // Ensure Operation Claims
+            foreach (var claim in StaticOperationClaims)
             {
-                FullName = "System Admin",
-                Password = "Q1w212*_*",
-                Email = "admin@adminmail.com",
-            });
-            await mediator.Send(new CreateUserClaimsInternalCommand
+                var claimExists = await internalOperationClaimService.GetClaimByNameAsync(claim);
+                if (!claimExists.Success || claimExists.Data == null)
+                {
+                    await internalOperationClaimService.CreateInternalClaimAsync(claim);
+                }
+            }
+
+            // Ensure Roles and Users
+            foreach (var role in StaticRoles)
             {
-                UserId = 1,
-                OperationClaims = operationClaims
-            });
-            */
+                var userEmail = $"{role.ToLower()}@example.com";
+                var userPassword = $"{role}123!";
+                var userFullName = $"{role} User";
+
+                // Check or Create User
+                var userResult = await internalUserService.GetUserByEmailAsync(userEmail);
+                var userId = userResult.Data?.UserId ?? 0;
+
+                if (userId == 0)
+                {
+                    var createUserResult = await internalUserService.RegisterInternalUserAsync(userEmail, userPassword, userFullName);
+                    if (createUserResult.Success)
+                    {
+                        userId = createUserResult.Data.UserId;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error creating user {userEmail}: {createUserResult.Message}");
+                        continue;
+                    }
+                }
+
+                // Ensure Role Claims
+                if (RoleClaims.TryGetValue(role, out var claims))
+                {
+                    foreach (var claim in claims)
+                    {
+                        var userClaimResult = await internalUserClaimService.CheckUserClaimAsync(userId, claim);
+                        if (!userClaimResult.Success || userClaimResult.Data == null)
+                        {
+                            await internalUserClaimService.AssignClaimToUserAsync(userId, claim);
+                        }
+                    }
+                }
+            }
         }
 
-        private static IEnumerable<string> GetOperationNames()
+        private static readonly List<string> StaticRoles = new List<string>
         {
-            var assemblies = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(x =>
-                    // runtime generated anonmous type'larin assemblysi olmadigi icin null cek yap
-                    x.Namespace != null && x.Namespace.StartsWith("Business.Handlers") &&
-                    (x.Name.EndsWith("Command") || x.Name.EndsWith("Query")));
+            "Admin",
+            "School",
+            "Trainer",
+            "Parent",
+            "Student"
+        };
 
-            return (from assembly in assemblies
-                    from nestedType in assembly.GetNestedTypes()
-                    from method in nestedType.GetMethods()
-                    where method.CustomAttributes.Any(u => u.AttributeType == typeof(SecuredOperation))
-                    select assembly.Name).ToList();
-        }
+        private static readonly List<string> StaticOperationClaims = new List<string>
+        {
+            "ManageStudents",
+            "ViewReports",
+            "ManagePayments",
+            "TrackProgress",
+            "ManageBranches",
+            "ManageTrainers",
+            "ViewBranchReports"
+        };
+
+        private static readonly Dictionary<string, List<string>> RoleClaims = new Dictionary<string, List<string>>
+        {
+            {
+                "Admin",
+                new List<string>
+                {
+                    "ManageStudents", "ViewReports", "ManagePayments", "TrackProgress", "ManageBranches",
+                    "ManageTrainers", "ViewBranchReports"
+                }
+            },
+            { "School", new List<string> { "ManageStudents", "ViewBranchReports", "ManageTrainers" } },
+            { "Trainer", new List<string> { "ManageStudents", "TrackProgress" } },
+            { "Parent", new List<string> { "ViewReports", "TrackProgress" } },
+            { "Student", new List<string> { "TrackProgress" } }
+        };
     }
 }

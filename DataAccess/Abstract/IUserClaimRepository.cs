@@ -10,5 +10,6 @@ namespace DataAccess.Abstract
     {
         Task<IEnumerable<SelectionItem>> GetUserClaimSelectedList(int userId);
         Task<IEnumerable<UserClaim>> BulkInsert(int userId, IEnumerable<UserClaim> userClaims);
+        Task<OperationClaim> GetClaimByNameAsync(string claimName);
     }
 }

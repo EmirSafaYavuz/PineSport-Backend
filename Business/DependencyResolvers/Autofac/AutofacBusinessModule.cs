@@ -5,9 +5,14 @@ using System.Reflection;
 using System.Text;
 using Autofac.Extras.DynamicProxy;
 using AutoMapper;
+using Business.Fakes.Handlers.OperationClaims;
+using Business.Fakes.Handlers.User;
+using Business.Fakes.Handlers.UserClaims;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Module = Autofac.Module;
@@ -18,10 +23,6 @@ namespace Business.DependencyResolvers.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProjectDbContext>()
-                .As<DbContext>()
-                .InstancePerLifetimeScope();
-            
             /*
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();
@@ -32,6 +33,20 @@ namespace Business.DependencyResolvers.Autofac
 
             builder.RegisterType<AuthManager>().As<IAuthService>();
             */
+            builder.RegisterType<LogRepository>().As<ILogRepository>();
+            builder.RegisterType<TranslateRepository>().As<ITranslateRepository>();
+            builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
+            
+            
+            builder.RegisterType<OperationClaimRepository>().As<IOperationClaimRepository>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<UserClaimRepository>().As<IUserClaimRepository>();
+            
+            builder.RegisterType<GroupRepository>().As<IGroupRepository>();
+            builder.RegisterType<GroupClaimRepository>().As<IGroupClaimRepository>();
+            builder.RegisterType<UserGroupRepository>().As<IUserGroupRepository>();
+            
+            
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
             builder.Register(context => new MapperConfiguration(cfg =>
@@ -52,6 +67,23 @@ namespace Business.DependencyResolvers.Autofac
                     Selector = new AspectInterceptorSelector()
                 }).SingleInstance();
 
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (environment == "Development")
+            {
+                // Development ortamında Fake sınıfları kullan
+            }
+            builder.RegisterType<InternalOperationClaimService>()
+                .As<IInternalOperationClaimService>()
+                .SingleInstance();
+
+            builder.RegisterType<InternalUserService>()
+                .As<IInternalUserService>()
+                .SingleInstance();
+
+            builder.RegisterType<InternalUserClaimService>()
+                .As<IInternalUserClaimService>()
+                .SingleInstance();
         }
     }
 }
