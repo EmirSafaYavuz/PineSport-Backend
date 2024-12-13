@@ -42,11 +42,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<UserRepository>().As<IUserRepository>();
             builder.RegisterType<UserClaimRepository>().As<IUserClaimRepository>();
             
-            builder.RegisterType<GroupRepository>().As<IGroupRepository>();
-            builder.RegisterType<GroupClaimRepository>().As<IGroupClaimRepository>();
-            builder.RegisterType<UserGroupRepository>().As<IUserGroupRepository>();
-            
-            
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
             builder.Register(context => new MapperConfiguration(cfg =>

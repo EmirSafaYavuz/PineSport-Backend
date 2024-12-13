@@ -119,7 +119,7 @@ else
 
 app.ConfigureCustomExceptionMiddleware();
 
-app.UseDbOperationClaimCreator();
+//app.UseDbOperationClaimCreator();
 
 // Swagger
 if (!app.Environment.IsProduction())

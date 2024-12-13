@@ -1,17 +1,19 @@
 using Core.Entities;
+using Core.Entities.Concrete;
 
 namespace Entities.Concrete;
 
-public class Student : BaseEntity<int>
+public class Student : User
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public string ParentName { get; set; }
-    public string ParentPhone { get; set; }
-    public int SchoolId { get; set; }
-    public School School { get; set; }
+    
+    public int BranchId { get; set; }
+    public Branch Branch { get; set; }
+    
+    public int ParentId { get; set; }
+    public Parent Parent { get; set; }
+    
     public ICollection<StudentSession> StudentSessions { get; set; }
     public ICollection<Payment> Payments { get; set; }
-    public ICollection<StudentProgress> Progress { get; set; }
+    public ICollection<StudentProgress> ProgressRecords { get; set; }
 }

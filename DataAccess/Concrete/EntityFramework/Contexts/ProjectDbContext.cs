@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -47,14 +48,21 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<GroupClaim> GroupClaims { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<MobileLogin> MobileLogins { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Translate> Translates { get; set; }
+        
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<Parent> Parents { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<School> Schools { get; set; }
+        public DbSet<Session> Sessions { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<StudentProgress> StudentProgress { get; set; }
+        public DbSet<StudentSession> StudentSession { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
 
         protected IConfiguration Configuration { get; }
 

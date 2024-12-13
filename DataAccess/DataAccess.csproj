@@ -9,6 +9,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="Concrete\EntityFramework\ContextExtensions.cs" />
+		<Compile Remove="Concrete\EntityFramework\UserGroupRepository.cs" />
+		<Compile Remove="Concrete\EntityFramework\GroupClaimRepository.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">

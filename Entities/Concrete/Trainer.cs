@@ -1,12 +1,10 @@
 using Core.Entities;
+using Core.Entities.Concrete;
 
 namespace Entities.Concrete;
 
-public class Trainer : BaseEntity<int>
+public class Trainer : User
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Phone { get; set; }
-    public int SessionId { get; set; }
-    public Session Session { get; set; }
+    public string Specialization { get; set; }
+    public ICollection<Session> Sessions { get; set; }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20241203171333_Initial")]
+    [Migration("20241213130234_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -40,7 +40,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.GroupClaim", b =>
@@ -53,7 +53,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("GroupId", "ClaimId");
 
-                    b.ToTable("GroupClaims");
+                    b.ToTable("GroupClaim");
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.Language", b =>
@@ -1192,6 +1192,10 @@ namespace DataAccess.Migrations
                     b.Property<long>("CitizenId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -1230,6 +1234,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("UpdateContactDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int>("UserRole")
+                        .HasColumnType("integer");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("CitizenId");
@@ -1237,6 +1244,10 @@ namespace DataAccess.Migrations
                     b.HasIndex("MobilePhones");
 
                     b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.UserClaim", b =>
@@ -1262,7 +1273,358 @@ namespace DataAccess.Migrations
 
                     b.HasKey("UserId", "GroupId");
 
-                    b.ToTable("UserGroups");
+                    b.ToTable("UserGroup");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Branch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.School", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Schools");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Session", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("interval");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.StudentProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("RecordDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TrainerNote")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentProgress");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.StudentSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentSession");
+                });
+
+            modelBuilder.Entity("SessionTrainer", b =>
+                {
+                    b.Property<int>("SessionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TrainersUserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SessionsId", "TrainersUserId");
+
+                    b.HasIndex("TrainersUserId");
+
+                    b.ToTable("SessionTrainer");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Parent", b =>
+                {
+                    b.HasBaseType("Core.Entities.Concrete.User");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Parent");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Student", b =>
+                {
+                    b.HasBaseType("Core.Entities.Concrete.User");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasDiscriminator().HasValue("Student");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Trainer", b =>
+                {
+                    b.HasBaseType("Core.Entities.Concrete.User");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Trainer");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Branch", b =>
+                {
+                    b.HasOne("Entities.Concrete.School", "School")
+                        .WithMany("Branches")
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("School");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Payment", b =>
+                {
+                    b.HasOne("Entities.Concrete.Student", "Student")
+                        .WithMany("Payments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Session", b =>
+                {
+                    b.HasOne("Entities.Concrete.Branch", "Branch")
+                        .WithMany("Sessions")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.StudentProgress", b =>
+                {
+                    b.HasOne("Entities.Concrete.Student", "Student")
+                        .WithMany("ProgressRecords")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.StudentSession", b =>
+                {
+                    b.HasOne("Entities.Concrete.Session", "Session")
+                        .WithMany("StudentSessions")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.Student", "Student")
+                        .WithMany("StudentSessions")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SessionTrainer", b =>
+                {
+                    b.HasOne("Entities.Concrete.Session", null)
+                        .WithMany()
+                        .HasForeignKey("SessionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.Trainer", null)
+                        .WithMany()
+                        .HasForeignKey("TrainersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Student", b =>
+                {
+                    b.HasOne("Entities.Concrete.Branch", "Branch")
+                        .WithMany("Students")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.Parent", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Branch", b =>
+                {
+                    b.Navigation("Sessions");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.School", b =>
+                {
+                    b.Navigation("Branches");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Session", b =>
+                {
+                    b.Navigation("StudentSessions");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Parent", b =>
+                {
+                    b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Student", b =>
+                {
+                    b.Navigation("Payments");
+
+                    b.Navigation("ProgressRecords");
+
+                    b.Navigation("StudentSessions");
                 });
 #pragma warning restore 612, 618
         }
