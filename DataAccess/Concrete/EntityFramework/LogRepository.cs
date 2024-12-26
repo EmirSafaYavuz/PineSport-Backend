@@ -7,9 +7,5 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class LogRepository : EfEntityRepositoryBase<Log, ProjectDbContext>, ILogRepository
     {
-        public LogRepository(ProjectDbContext context)
-            : base(context)
-        {
-        }
     }
 }

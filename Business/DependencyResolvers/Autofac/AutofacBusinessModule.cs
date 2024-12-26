@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using Autofac.Extras.DynamicProxy;
 using AutoMapper;
+using Business.Abstract;
+using Business.Concrete;
 using Business.Fakes.Handlers.OperationClaims;
 using Business.Fakes.Handlers.User;
 using Business.Fakes.Handlers.UserClaims;
@@ -23,24 +25,29 @@ namespace Business.DependencyResolvers.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
-            /*
-            builder.RegisterType<UserManager>().As<IUserService>();
-            builder.RegisterType<EfUserDal>().As<IUserDal>();
-
-            builder.RegisterType<PostService>().As<IPostService>();
-            builder.RegisterType<EfPostDal>().As<IPostDal>();
-            builder.RegisterType<PostBusinessRules>().AsSelf();
-
-            builder.RegisterType<AuthManager>().As<IAuthService>();
-            */
+            builder.RegisterType<AdminService>().As<IAdminService>();
+            builder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+            builder.RegisterType<BranchService>().As<IBranchService>();
+            builder.RegisterType<ParentService>().As<IParentService>();
+            builder.RegisterType<PaymentService>().As<IPaymentService>();
+            builder.RegisterType<SchoolService>().As<ISchoolService>();
+            builder.RegisterType<SessionService>().As<ISessionService>();
+            builder.RegisterType<StudentService>().As<IStudentService>();
+            builder.RegisterType<TrainerService>().As<ITrainerService>();
+            
             builder.RegisterType<LogRepository>().As<ILogRepository>();
             builder.RegisterType<TranslateRepository>().As<ITranslateRepository>();
             builder.RegisterType<LanguageRepository>().As<ILanguageRepository>();
-            
-            
             builder.RegisterType<OperationClaimRepository>().As<IOperationClaimRepository>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
             builder.RegisterType<UserClaimRepository>().As<IUserClaimRepository>();
+            builder.RegisterType<RoleRepository>().As<IRoleRepository>();
+            builder.RegisterType<RoleClaimRepository>().As<IRoleClaimRepository>();
+            
+            builder.RegisterType<BranchRepository>().As<IBranchRepository>();
+            builder.RegisterType<StudentRepository>().As<IStudentRepository>();
+            builder.RegisterType<ParentRepository>().As<IParentRepository>();
+            builder.RegisterType<SchoolRepository>().As<ISchoolRepository>();
             
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 

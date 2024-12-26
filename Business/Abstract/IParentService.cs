@@ -1,6 +1,9 @@
+using Core.Utilities.Results;
+using Entities.Dtos;
+
 namespace Business.Abstract;
 
-public class IParentService
+public interface IParentService
 {
-    
+    IResult RegisterParent(ParentUserRegisterDto parentUserRegisterDto);
 }

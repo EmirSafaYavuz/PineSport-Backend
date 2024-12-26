@@ -177,6 +177,73 @@ namespace DataAccess.Migrations
                     b.ToTable("OperationClaims");
                 });
 
+            modelBuilder.Entity("Core.Entities.Concrete.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Administrator with full access",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Role for school management",
+                            Name = "School"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Role for students",
+                            Name = "Student"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Role for parents",
+                            Name = "Parent"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Role for trainers or instructors",
+                            Name = "Trainer"
+                        });
+                });
+
+            modelBuilder.Entity("Core.Entities.Concrete.RoleClaim", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClaimId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RoleId", "ClaimId");
+
+                    b.ToTable("RoleClaim");
+                });
+
             modelBuilder.Entity("Core.Entities.Concrete.Translate", b =>
                 {
                     b.Property<int>("Id")
@@ -1189,10 +1256,6 @@ namespace DataAccess.Migrations
                     b.Property<long>("CitizenId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -1225,14 +1288,14 @@ namespace DataAccess.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("UpdateContactDate")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("UserRole")
-                        .HasColumnType("integer");
 
                     b.HasKey("UserId");
 
@@ -1240,11 +1303,11 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("MobilePhones");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.UserClaim", b =>
@@ -1296,9 +1359,14 @@ namespace DataAccess.Migrations
                     b.Property<int>("SchoolId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SchoolUserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SchoolId");
+
+                    b.HasIndex("SchoolUserId");
 
                     b.ToTable("Branches");
                 });
@@ -1331,31 +1399,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.School", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Session", b =>
@@ -1458,11 +1501,29 @@ namespace DataAccess.Migrations
                 {
                     b.HasBaseType("Core.Entities.Concrete.User");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.ToTable("Parents");
+                });
 
-                    b.HasDiscriminator().HasValue("Parent");
+            modelBuilder.Entity("Entities.Concrete.School", b =>
+                {
+                    b.HasBaseType("Core.Entities.Concrete.User");
+
+                    b.Property<string>("SchoolAddress")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("SchoolName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SchoolPhone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.ToTable("Schools", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Concrete.Student", b =>
@@ -1472,9 +1533,6 @@ namespace DataAccess.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<int>("ParentId")
                         .HasColumnType("integer");
 
@@ -1482,7 +1540,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasDiscriminator().HasValue("Student");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Trainer", b =>
@@ -1493,14 +1551,31 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasDiscriminator().HasValue("Trainer");
+                    b.ToTable("Trainers");
+                });
+
+            modelBuilder.Entity("Core.Entities.Concrete.User", b =>
+                {
+                    b.HasOne("Core.Entities.Concrete.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Branch", b =>
                 {
-                    b.HasOne("Entities.Concrete.School", "School")
+                    b.HasOne("Entities.Concrete.School", null)
                         .WithMany("Branches")
                         .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1574,6 +1649,15 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Entities.Concrete.School", b =>
+                {
+                    b.HasOne("Core.Entities.Concrete.User", null)
+                        .WithOne()
+                        .HasForeignKey("Entities.Concrete.School", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Entities.Concrete.Student", b =>
                 {
                     b.HasOne("Entities.Concrete.Branch", "Branch")
@@ -1588,9 +1672,24 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Core.Entities.Concrete.User", null)
+                        .WithOne()
+                        .HasForeignKey("Entities.Concrete.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Branch");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Trainer", b =>
+                {
+                    b.HasOne("Core.Entities.Concrete.User", null)
+                        .WithOne()
+                        .HasForeignKey("Entities.Concrete.Trainer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Concrete.Branch", b =>
@@ -1598,11 +1697,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Sessions");
 
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.School", b =>
-                {
-                    b.Navigation("Branches");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Session", b =>
@@ -1613,6 +1707,11 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrete.Parent", b =>
                 {
                     b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.School", b =>
+                {
+                    b.Navigation("Branches");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Student", b =>

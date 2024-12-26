@@ -12,15 +12,11 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class LanguageRepository : EfEntityRepositoryBase<Language, ProjectDbContext>, ILanguageRepository
     {
-        public LanguageRepository(ProjectDbContext context)
-            : base(context)
-        {
-        }
-
         public async Task<List<SelectionItem>> GetLanguagesLookUp()
         {
-            var lookUp = await (from entity in Context.Languages
-                select new SelectionItem()
+            await using var context = new ProjectDbContext();
+            var lookUp = await (from entity in context.Languages
+                select new SelectionItem
                 {
                     Id = entity.Id,
                     Label = entity.Name
@@ -30,8 +26,9 @@ namespace DataAccess.Concrete.EntityFramework
 
         public async Task<List<SelectionItem>> GetLanguagesLookUpWithCode()
         {
-            var lookUp = await (from entity in Context.Languages
-                select new SelectionItem()
+            await using var context = new ProjectDbContext();
+            var lookUp = await (from entity in context.Languages
+                select new SelectionItem
                 {
                     Id = entity.Code.ToString(),
                     Label = entity.Name

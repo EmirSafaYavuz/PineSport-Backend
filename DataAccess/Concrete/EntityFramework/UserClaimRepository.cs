@@ -13,17 +13,15 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class UserClaimRepository : EfEntityRepositoryBase<UserClaim, ProjectDbContext>, IUserClaimRepository
     {
-        public UserClaimRepository(ProjectDbContext context)
-            : base(context)
-        {
-        }
 
         public async Task<IEnumerable<UserClaim>> BulkInsert(int userId, IEnumerable<UserClaim> userClaims)
         {
-            var DbClaimList = Context.UserClaims.Where(x => x.UserId == userId);
+            await using var context = new ProjectDbContext();
 
-            Context.UserClaims.RemoveRange(DbClaimList);
-            await Context.UserClaims.AddRangeAsync(userClaims);
+            var DbClaimList = context.UserClaims.Where(x => x.UserId == userId);
+
+            context.UserClaims.RemoveRange(DbClaimList);
+            await context.UserClaims.AddRangeAsync(userClaims);
             return userClaims;
         }
 
@@ -34,17 +32,20 @@ namespace DataAccess.Concrete.EntityFramework
             {
                 throw new ArgumentException("Claim adı boş olamaz.", nameof(claimName));
             }
+            await using var context = new ProjectDbContext();
 
             // OperationClaims tablosunda verilen isimle eşleşen claim'i ara
-            var claim = await Context.OperationClaims.FirstOrDefaultAsync(c => c.Name == claimName);
+            var claim = await context.OperationClaims.FirstOrDefaultAsync(c => c.Name == claimName);
 
             return claim;
         }
 
         public async Task<IEnumerable<SelectionItem>> GetUserClaimSelectedList(int userId)
         {
-            var list = await (from oc in Context.OperationClaims
-                join userClaims in Context.UserClaims on oc.Id equals userClaims.ClaimId
+            await using var context = new ProjectDbContext();
+
+            var list = await (from oc in context.OperationClaims
+                join userClaims in context.UserClaims on oc.Id equals userClaims.ClaimId
                 where userClaims.UserId == userId
                 select new SelectionItem()
                 {

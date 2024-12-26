@@ -8,20 +8,27 @@ using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
 using Core.CrossCuttingConcerns.Caching;
+using Core.Entities.Concrete;
+using Entities.Concrete;
+using Entities.Dtos;
 
 namespace Business.Concrete
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IStudentRepository _studentRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly ITokenHelper _tokenHelper;
         private readonly ICacheManager _cacheManager;
 
-        public AuthenticationService(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager)
+        public AuthenticationService(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IRoleRepository roleRepository, IStudentRepository studentRepository)
         {
             _userRepository = userRepository;
             _tokenHelper = tokenHelper;
             _cacheManager = cacheManager;
+            _roleRepository = roleRepository;
+            _studentRepository = studentRepository;
         }
 
         public IDataResult<AccessToken> LoginUser(LoginDto loginDto)
@@ -35,7 +42,7 @@ namespace Business.Concrete
             }
 
             // Şifre doğrulama
-            if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordSalt, user.PasswordHash))
+            if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new ErrorDataResult<AccessToken>(Messages.PasswordError);
             }
@@ -44,11 +51,11 @@ namespace Business.Concrete
 
             var accessToken = _tokenHelper.CreateToken<PineToken>(user);
             accessToken.Claims = claims.Select(x => x.Name).ToList();
+            accessToken.Role = _roleRepository.Get(r=>r.Id == user.RoleId);
             
             // Kullanıcının refresh token'ını güncelle
             user.RefreshToken = accessToken.RefreshToken;
             _userRepository.Update(user);
-            _userRepository.SaveChanges();
 
             // Yetki bilgilerini cache'e ekle
             _cacheManager.Add($"{CacheKeys.UserIdForClaim}={user.UserId}", claims.Select(x => x.Name));

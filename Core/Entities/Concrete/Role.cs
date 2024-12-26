@@ -1,8 +1,6 @@
-using Core.Entities;
+namespace Core.Entities.Concrete;
 
-namespace Entities.Concrete;
-
-public class Role : BaseEntity<int>
+public class Role : BaseEntity
 {
     public string Name { get; set; }
     public string Description { get; set; }

@@ -20,6 +20,7 @@ using DataAccess.Concrete.EntityFramework.Contexts;
 using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,7 +101,9 @@ if (taskSchedulerConfig.Enabled)
 
 var coreModule = new CoreModule();
 builder.Services.AddDependencyResolvers(builder.Configuration, new ICoreModule[] { coreModule });
-builder.Services.AddDbContext<ProjectDbContext>();
+builder.Services.AddDbContext<ProjectDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PgContext"))
+        .EnableSensitiveDataLogging());
 
 var app = builder.Build();
 

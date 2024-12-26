@@ -10,7 +10,7 @@ namespace WebAPI.Controllers
     /// <summary>
     /// Base controller
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     [ApiController]
     public class BaseApiController : Controller
@@ -152,6 +152,24 @@ namespace WebAPI.Controllers
                 Message = message,
                 InternalMessage = internalMessage,
                 Data = data
+            });
+        }
+        
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <param name="internalMessage"></param>
+        /// <returns></returns>
+        [NonAction]
+        protected IActionResult BadRequest(string message, string internalMessage)
+        {
+            return BadRequest(new ApiResult<object>
+            {
+                Success = false,
+                Message = message,
+                InternalMessage = internalMessage,
             });
         }
 

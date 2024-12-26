@@ -1,6 +1,8 @@
+using Business.Abstract;
+
 namespace Business.Concrete;
 
-public class PaymentService
+public class PaymentService : IPaymentService
 {
     
 }

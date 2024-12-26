@@ -7,9 +7,5 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class GroupRepository : EfEntityRepositoryBase<Group, ProjectDbContext>, IGroupRepository
     {
-        public GroupRepository(ProjectDbContext context)
-            : base(context)
-        {
-        }
     }
 }

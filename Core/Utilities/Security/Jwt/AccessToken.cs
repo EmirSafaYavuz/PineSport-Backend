@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Entities.Concrete;
 
 namespace Core.Utilities.Security.Jwt
 {
@@ -9,5 +10,6 @@ namespace Core.Utilities.Security.Jwt
         public string Token { get; set; }
         public DateTime Expiration { get; set; }
         public string RefreshToken { get; set; }
+        public Role Role { get; set; }
     }
 }

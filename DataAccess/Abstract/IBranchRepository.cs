@@ -1,6 +1,9 @@
+using Core.DataAccess;
+using Entities.Concrete;
+
 namespace DataAccess.Abstract;
 
-public interface IBranchRepository
+public interface IBranchRepository : IEntityRepository<Branch>
 {
     
 }

@@ -11,16 +11,14 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class UserRepository : EfEntityRepositoryBase<User, ProjectDbContext>, IUserRepository
     {
-        public UserRepository(ProjectDbContext context)
-            : base(context)
-        {
-        }
 
         public List<OperationClaim> GetClaims(int userId)
         {
-            var result = (from user in Context.Users
-                join userClaim in Context.UserClaims on user.UserId equals userClaim.UserId
-                join operationClaim in Context.OperationClaims on userClaim.ClaimId equals operationClaim.Id
+            using var context = new ProjectDbContext();
+
+            var result = (from user in context.Users
+                join userClaim in context.UserClaims on user.UserId equals userClaim.UserId
+                join operationClaim in context.OperationClaims on userClaim.ClaimId equals operationClaim.Id
                 where user.UserId == userId
                 select new
                 {
@@ -32,7 +30,9 @@ namespace DataAccess.Concrete.EntityFramework
 
         public async Task<User> GetByRefreshToken(string refreshToken)
         {
-            return await Context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken && u.Status);
+            await using var context = new ProjectDbContext();
+
+            return await context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken && u.Status);
         }
     }
 }

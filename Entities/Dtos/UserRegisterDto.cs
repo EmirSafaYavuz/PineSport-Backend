@@ -1,6 +1,6 @@
 namespace Entities.Dtos;
 
-public class RegisterDto
+public class UserRegisterDto
 {
     public string FullName { get; set; }
     public string Email { get; set; }

@@ -91,8 +91,29 @@ namespace Core.Utilities.Security.Jwt
                 claims.AddName($"{user.FullName}");
             }
 
-            claims.Add(new Claim(ClaimTypes.Role, user.AuthenticationProviderType));
+            //claims.Add(new Claim(ClaimTypes.Role, user.AuthenticationProviderType));
 
+            switch (user.RoleId)
+            {
+                case 1:
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    break;
+                case 2:
+                    claims.Add(new Claim(ClaimTypes.Role, "School"));
+                    break;
+                case 3:
+                    claims.Add(new Claim(ClaimTypes.Role, "Student"));
+                    break;
+                case 4:
+                    claims.Add(new Claim(ClaimTypes.Role, "Parent"));
+                    break;
+                case 5:
+                    claims.Add(new Claim(ClaimTypes.Role, "Trainer"));
+                    break;
+                default:
+                    claims.Add(new Claim(ClaimTypes.Role, "User"));
+                    break;
+            }
 
             return claims;
         }

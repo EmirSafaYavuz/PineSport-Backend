@@ -1,6 +1,9 @@
+using Core.DataAccess;
+using Entities.Concrete;
+
 namespace DataAccess.Abstract;
 
-public interface IParentRepository
+public interface IParentRepository : IEntityRepository<Parent>
 {
     
 }

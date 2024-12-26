@@ -5,8 +5,6 @@ namespace Entities.Concrete;
 
 public class Student : User
 {
-    public DateTime DateOfBirth { get; set; }
-    
     public int BranchId { get; set; }
     public Branch Branch { get; set; }
     

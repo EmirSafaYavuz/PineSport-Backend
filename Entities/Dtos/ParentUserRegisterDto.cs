@@ -2,7 +2,7 @@ using Core.Entities;
 
 namespace Entities.Dtos;
 
-public class ParentRegisterDto : RegisterDto
+public class ParentUserRegisterDto : UserRegisterDto
 {
     
 }
