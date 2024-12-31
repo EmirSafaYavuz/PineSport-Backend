@@ -60,5 +60,39 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
             .ForMember(dest => dest.RecordDate, opt => opt.Ignore())
             .ForMember(dest => dest.UpdateContactDate, opt => opt.Ignore());
+        
+        CreateMap<Student, StudentDto>()
+            .ForMember(dest => dest.MobilePhone, opt => opt.MapFrom(src => src.MobilePhones))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender == 0 ? "Male" : "Female")) // Gender mapping
+            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch != null ? src.Branch.BranchName : string.Empty))
+            .ForMember(dest => dest.ParentName, opt => opt.MapFrom(src => src.Parent != null ? src.Parent.FullName : string.Empty))
+            .ReverseMap()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender == "Male" ? 0 : 1))
+            .ForMember(dest => dest.Branch, opt => opt.Ignore()) // Branch nesnesi için manuel işlem gerekebilir
+            .ForMember(dest => dest.Parent, opt => opt.Ignore());
+        
+        CreateMap<StudentRegisterDto, Student>()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()) // Şifre için özel bir işlem yapılabilir
+            .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+            .ForMember(dest => dest.RecordDate, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdateContactDate, opt => opt.Ignore());
+        
+        CreateMap<Parent, ParentDto>()
+            .ForMember(dest => dest.MobilePhone, opt => opt.MapFrom(src => src.MobilePhones))
+            .ForMember(dest => dest.ChildrenNames, opt => opt.MapFrom(src => src.Children != null 
+                ? src.Children.Select(child => child.FullName).ToList() 
+                : new List<string>()))
+            .ReverseMap()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.Children, opt => opt.Ignore());
+        
+        CreateMap<ParentRegisterDto, Parent>()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()) // Şifre için özel bir işlem yapılabilir
+            .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+            .ForMember(dest => dest.RecordDate, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdateContactDate, opt => opt.Ignore());
     }
 }

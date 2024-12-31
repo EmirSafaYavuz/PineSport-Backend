@@ -8,4 +8,6 @@ namespace Business.Abstract;
 public interface IStudentService
 {
     IResult RegisterStudent(StudentRegisterDto studentRegisterDto);
+    IDataResult<StudentDto> GetStudentById(int studentId);
+    IDataResult<List<StudentDto>> GetStudents();
 }

@@ -90,6 +90,7 @@ namespace Business.Concrete
                 new SidebarMenuDto { Title = "Şubeler", Icon = "location_city", Path = "/branches" },
                 new SidebarMenuDto { Title = "Eğitmenler", Icon = "people", Path = "/trainers" },
                 new SidebarMenuDto { Title = "Öğrenciler", Icon = "people", Path = "/students" },
+                new SidebarMenuDto { Title = "Veliler", Icon = "people", Path = "/parents" },
                 new SidebarMenuDto { Title = "Ödemeler", Icon = "credit_card", Path = "/payments" },
                 new SidebarMenuDto { Title = "Raporlar", Icon = "bar_chart", Path = "/reports" },
                 new SidebarMenuDto { Title = "Gelişimler", Icon = "trending_up", Path = "/progress" }

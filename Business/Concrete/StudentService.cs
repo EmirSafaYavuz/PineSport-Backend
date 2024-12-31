@@ -1,3 +1,4 @@
+using AutoMapper;
 using Business.Abstract;
 using Business.Authentication.Model;
 using Business.Constants;
@@ -15,12 +16,14 @@ public class StudentService : IStudentService
     private readonly IRoleRepository _roleRepository;
     private readonly IUserRepository _userRepository;
     private readonly IStudentRepository _studentRepository;
+    private readonly IMapper _mapper;
 
-    public StudentService(IRoleRepository roleRepository, IUserRepository userRepository, IStudentRepository studentRepository)
+    public StudentService(IRoleRepository roleRepository, IUserRepository userRepository, IStudentRepository studentRepository, IMapper mapper)
     {
         _roleRepository = roleRepository;
         _userRepository = userRepository;
         _studentRepository = studentRepository;
+        _mapper = mapper;
     }
 
     public IResult RegisterStudent(StudentRegisterDto studentRegisterDto)
@@ -58,5 +61,27 @@ public class StudentService : IStudentService
         _studentRepository.Add(user);
 
         return new SuccessResult(Messages.UserRegistered);
+    }
+
+    public IDataResult<StudentDto> GetStudentById(int studentId)
+    {
+        var student = _studentRepository.Get(s => s.Id == studentId);
+        
+        if (student == null)
+        {
+            return new ErrorDataResult<StudentDto>(Messages.UserNotFound);
+        }
+        
+        var studentDto = _mapper.Map<StudentDto>(student);
+        return new SuccessDataResult<StudentDto>(studentDto);
+    }
+
+    public IDataResult<List<StudentDto>> GetStudents()
+    {
+        var students = _studentRepository.GetList().ToList();
+        
+        var studentDtos = _mapper.Map<List<StudentDto>>(students);
+        
+        return new SuccessDataResult<List<StudentDto>>(studentDtos);
     }
 }
