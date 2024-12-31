@@ -41,5 +41,24 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.School, opt => opt.Ignore());
         
         CreateMap<BranchRegisterDto, Branch>();
+        
+        CreateMap<Trainer, TrainerDto>()
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.MobilePhone, opt => opt.MapFrom(src => src.MobilePhones))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender == 0 ? "Erkek" : "Kadın")) // Gender mapping, özelleştirilebilir
+            .ForMember(dest => dest.Specialization, opt => opt.MapFrom(src => src.Specialization))
+            .ReverseMap()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender == "Erkek" ? 0 : 1));
+        
+        CreateMap<TrainerRegisterDto, Trainer>()
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore()) // Şifre için özel bir işlem yapılabilir
+            .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+            .ForMember(dest => dest.RecordDate, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdateContactDate, opt => opt.Ignore());
     }
 }

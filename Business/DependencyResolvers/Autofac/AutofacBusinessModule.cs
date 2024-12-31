@@ -48,6 +48,7 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<StudentRepository>().As<IStudentRepository>();
             builder.RegisterType<ParentRepository>().As<IParentRepository>();
             builder.RegisterType<SchoolRepository>().As<ISchoolRepository>();
+            builder.RegisterType<TrainerRepository>().As<ITrainerRepository>();
             
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 

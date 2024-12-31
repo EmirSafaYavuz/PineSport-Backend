@@ -88,7 +88,7 @@ namespace Business.Concrete
                 new SidebarMenuDto { Title = "Ana Sayfa", Icon = "admin_panel_settings", Path = "/admin-dashboard" },
                 new SidebarMenuDto { Title = "Okullar", Icon = "school", Path = "/schools" },
                 new SidebarMenuDto { Title = "Şubeler", Icon = "location_city", Path = "/branches" },
-                new SidebarMenuDto { Title = "Eğitmenler", Icon = "people", Path = "/instructors" },
+                new SidebarMenuDto { Title = "Eğitmenler", Icon = "people", Path = "/trainers" },
                 new SidebarMenuDto { Title = "Öğrenciler", Icon = "people", Path = "/students" },
                 new SidebarMenuDto { Title = "Ödemeler", Icon = "credit_card", Path = "/payments" },
                 new SidebarMenuDto { Title = "Raporlar", Icon = "bar_chart", Path = "/reports" },
