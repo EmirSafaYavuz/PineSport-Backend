@@ -1,12 +1,13 @@
 using Core.Entities;
+using Core.Entities.Concrete;
 
 namespace Entities.Concrete;
 
-public class Branch : BaseEntity<int>
+public class Branch : User
 {
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public string Phone { get; set; }
+    public string BranchName { get; set; }
+    public string BranchAddress { get; set; }
+    public string BranchPhone { get; set; }
     
     public int SchoolId { get; set; }
     public School School { get; set; }

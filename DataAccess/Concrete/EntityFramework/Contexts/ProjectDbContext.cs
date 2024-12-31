@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Core.Entities.Concrete;
+using DataAccess.Concrete.Configurations;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<School> Schools { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<StudentProgress> StudentProgress { get; set; }
         public DbSet<StudentSession> StudentSession { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
@@ -53,6 +55,12 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasDiscriminator<string>("Role")
+                .HasValue<User>("Person")
+                .HasValue<School>("School")
+                .HasValue<Branch>("Branch")
+                .HasValue<Student>("Student")
+                .HasValue<Trainer>("Trainer");
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
@@ -67,7 +75,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
             if (!optionsBuilder.IsConfigured)
             {
                 // Add your fallback connection string here if needed.
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PineSport;Username=emirsafayavuz;Password=12345")
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PineSport2;Username=emirsafayavuz;Password=12345")
                               .EnableSensitiveDataLogging();
             }
         }

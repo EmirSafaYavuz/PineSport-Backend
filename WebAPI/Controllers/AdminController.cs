@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
@@ -22,9 +23,9 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("register")]
-        public IActionResult RegisterAdmin([FromBody] AdminUserRegisterDto adminUserRegisterDto)
+        public IActionResult RegisterAdmin([FromBody] AdminRegisterDto adminRegisterDto)
         {
-            var result = _adminService.RegisterAdmin(adminUserRegisterDto);
+            var result = _adminService.RegisterAdmin(adminRegisterDto);
 
             if (result.Success)
                 return Success(result.Message, "Admin registered successfully", result);

@@ -4,7 +4,9 @@ using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
+using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 
 namespace Business.Concrete;
 
@@ -19,7 +21,7 @@ public class AdminService : IAdminService
         _roleRepository = roleRepository;
     }
 
-    public IResult RegisterAdmin(AdminUserRegisterDto adminUserRegisterDto)
+    public IResult RegisterAdmin(AdminRegisterDto adminRegisterDto)
     {
         var role = _roleRepository.Query().FirstOrDefault(r => r.Name == "Admin");
         if (role == null)
@@ -27,25 +29,24 @@ public class AdminService : IAdminService
             return new ErrorResult(Messages.RoleNotFound);
         }
             
-        if (_userRepository.Query().Any(u => u.Email == adminUserRegisterDto.Email))
+        if (_userRepository.Query().Any(u => u.Email == adminRegisterDto.Email))
         {
             return new ErrorResult(Messages.UserAlreadyExists);
         }
 
         // Create a new user
         byte[] passwordHash, passwordSalt;
-        HashingHelper.CreatePasswordHash(adminUserRegisterDto.Password, out passwordHash, out passwordSalt);
+        HashingHelper.CreatePasswordHash(adminRegisterDto.Password, out passwordHash, out passwordSalt);
 
-        var user = new User
+        var user = new Admin
         {
-            FullName = adminUserRegisterDto.FullName,
-            Email = adminUserRegisterDto.Email,
-            MobilePhones = adminUserRegisterDto.MobilePhone,
-            BirthDate = adminUserRegisterDto.BirthDate,
-            Gender = adminUserRegisterDto.Gender,
-            Address = adminUserRegisterDto.Address,
-            Notes = adminUserRegisterDto.Notes,
-            RoleId = role.Id,
+            FullName = adminRegisterDto.FullName,
+            Email = adminRegisterDto.Email,
+            MobilePhones = adminRegisterDto.MobilePhone,
+            BirthDate = adminRegisterDto.BirthDate,
+            Gender = adminRegisterDto.Gender,
+            Address = adminRegisterDto.Address,
+            Notes = adminRegisterDto.Notes,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
         };

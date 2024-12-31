@@ -1,11 +1,13 @@
 using AutoMapper;
 using Business.Abstract;
+using Business.BusinessAspects;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 
 namespace Business.Concrete;
 
@@ -45,7 +47,6 @@ public class SchoolService : ISchoolService
             BirthDate = schoolRegisterDto.BirthDate,
             Gender = schoolRegisterDto.Gender,
             Notes = schoolRegisterDto.Notes,
-            RoleId = 2, // Okul yöneticisi rolü
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             Status = true,
@@ -61,6 +62,7 @@ public class SchoolService : ISchoolService
         return new SuccessResult("School successfully registered.");
     }
 
+    //[RoleRequirement("Admin")]
     public IDataResult<List<SchoolDto>> GetSchools()
     {
         var schools = _schoolRepository.GetList();
@@ -70,7 +72,7 @@ public class SchoolService : ISchoolService
 
     public IDataResult<SchoolDto> GetSchoolById(int schoolId)
     {
-        var school = _schoolRepository.Get(s => s.UserId == schoolId);
+        var school = _schoolRepository.Get(s => s.Id == schoolId);
         var mappedSchool = _mapper.Map<SchoolDto>(school);
         return new SuccessDataResult<SchoolDto>(mappedSchool);
     }

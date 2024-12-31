@@ -120,27 +120,12 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Schools",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false),
-                    Phone = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Schools", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,54 +168,10 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Branches",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false),
-                    Phone = table.Column<string>(type: "text", nullable: false),
-                    SchoolId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Branches", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Branches_Schools_SchoolId",
-                        column: x => x.SchoolId,
-                        principalTable: "Schools",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sessions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    BranchId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sessions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sessions_Branches_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CitizenId = table.Column<long>(type: "bigint", nullable: false),
                     FullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -244,36 +185,40 @@ namespace DataAccess.Migrations
                     Address = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     UpdateContactDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    RoleId = table.Column<int>(type: "integer", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: true),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    BranchName = table.Column<string>(type: "text", nullable: true),
+                    BranchAddress = table.Column<string>(type: "text", nullable: true),
+                    BranchPhone = table.Column<string>(type: "text", nullable: true),
+                    SchoolId = table.Column<int>(type: "integer", nullable: true),
+                    SchoolName = table.Column<string>(type: "text", nullable: true),
+                    SchoolAddress = table.Column<string>(type: "text", nullable: true),
+                    SchoolPhone = table.Column<string>(type: "text", nullable: true),
                     BranchId = table.Column<int>(type: "integer", nullable: true),
                     ParentId = table.Column<int>(type: "integer", nullable: true),
                     Specialization = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Branches_BranchId",
+                        name: "FK_Users_Users_BranchId",
                         column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Users_Users_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Users_SchoolId",
+                        column: x => x.SchoolId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -296,31 +241,29 @@ namespace DataAccess.Migrations
                         name: "FK_Payments_Users_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SessionTrainer",
+                name: "Sessions",
                 columns: table => new
                 {
-                    SessionsId = table.Column<int>(type: "integer", nullable: false),
-                    TrainersUserId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Time = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    BranchId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SessionTrainer", x => new { x.SessionsId, x.TrainersUserId });
+                    table.PrimaryKey("PK_Sessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SessionTrainer_Sessions_SessionsId",
-                        column: x => x.SessionsId,
-                        principalTable: "Sessions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SessionTrainer_Users_TrainersUserId",
-                        column: x => x.TrainersUserId,
+                        name: "FK_Sessions_Users_BranchId",
+                        column: x => x.BranchId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -343,7 +286,31 @@ namespace DataAccess.Migrations
                         name: "FK_StudentProgress_Users_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SessionTrainer",
+                columns: table => new
+                {
+                    SessionsId = table.Column<int>(type: "integer", nullable: false),
+                    TrainersId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SessionTrainer", x => new { x.SessionsId, x.TrainersId });
+                    table.ForeignKey(
+                        name: "FK_SessionTrainer_Sessions_SessionsId",
+                        column: x => x.SessionsId,
+                        principalTable: "Sessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SessionTrainer_Users_TrainersId",
+                        column: x => x.TrainersId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -369,7 +336,7 @@ namespace DataAccess.Migrations
                         name: "FK_StudentSession_Users_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -380,6 +347,18 @@ namespace DataAccess.Migrations
                 {
                     { 1, "tr-TR", "Türkçe" },
                     { 2, "en-US", "English" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Administrator with full access", "Admin" },
+                    { 2, "Role for school management", "School" },
+                    { 3, "Role for students", "Student" },
+                    { 4, "Role for parents", "Parent" },
+                    { 5, "Role for trainers or instructors", "Trainer" }
                 });
 
             migrationBuilder.InsertData(
@@ -528,11 +507,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Branches_SchoolId",
-                table: "Branches",
-                column: "SchoolId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MobileLogins_ExternalUserId_Provider",
                 table: "MobileLogins",
                 columns: new[] { "ExternalUserId", "Provider" });
@@ -548,9 +522,9 @@ namespace DataAccess.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SessionTrainer_TrainersUserId",
+                name: "IX_SessionTrainer_TrainersId",
                 table: "SessionTrainer",
-                column: "TrainersUserId");
+                column: "TrainersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentProgress_StudentId",
@@ -588,9 +562,9 @@ namespace DataAccess.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
+                name: "IX_Users_SchoolId",
                 table: "Users",
-                column: "RoleId");
+                column: "SchoolId");
         }
 
         /// <inheritdoc />
@@ -621,6 +595,9 @@ namespace DataAccess.Migrations
                 name: "RoleClaim");
 
             migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
                 name: "SessionTrainer");
 
             migrationBuilder.DropTable(
@@ -643,15 +620,6 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Branches");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Schools");
         }
     }
 }

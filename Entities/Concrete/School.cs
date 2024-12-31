@@ -11,4 +11,5 @@ public class School : User
     public string SchoolPhone { get; set; } 
     
     public ICollection<Branch> Branches { get; set; }
+    
 }

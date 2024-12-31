@@ -47,18 +47,18 @@ namespace Business.Concrete
                 return new ErrorDataResult<AccessToken>(Messages.PasswordError);
             }
             
-            var claims = _userRepository.GetClaims(user.UserId);
+            var claims = _userRepository.GetClaims(user.Id);
 
             var accessToken = _tokenHelper.CreateToken<PineToken>(user);
             accessToken.Claims = claims.Select(x => x.Name).ToList();
-            accessToken.Role = _roleRepository.Get(r=>r.Id == user.RoleId);
+            accessToken.Role = user.Role;
             
             // Kullanıcının refresh token'ını güncelle
             user.RefreshToken = accessToken.RefreshToken;
             _userRepository.Update(user);
 
             // Yetki bilgilerini cache'e ekle
-            _cacheManager.Add($"{CacheKeys.UserIdForClaim}={user.UserId}", claims.Select(x => x.Name));
+            _cacheManager.Add($"{CacheKeys.UserIdForClaim}={user.Id}", claims.Select(x => x.Name));
 
             return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
         }

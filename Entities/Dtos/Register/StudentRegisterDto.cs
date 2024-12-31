@@ -1,6 +1,4 @@
-using Core.Entities;
-
-namespace Entities.Dtos;
+namespace Entities.Dtos.Register;
 
 public class StudentRegisterDto : UserRegisterDto
 {

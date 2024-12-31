@@ -79,10 +79,6 @@ namespace Business.DependencyResolvers.Autofac
                 .As<IInternalOperationClaimService>()
                 .SingleInstance();
 
-            builder.RegisterType<InternalUserService>()
-                .As<IInternalUserService>()
-                .SingleInstance();
-
             builder.RegisterType<InternalUserClaimService>()
                 .As<IInternalUserClaimService>()
                 .SingleInstance();

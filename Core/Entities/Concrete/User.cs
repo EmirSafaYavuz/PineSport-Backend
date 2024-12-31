@@ -4,18 +4,18 @@ using Newtonsoft.Json;
 
 namespace Core.Entities.Concrete
 {
-    public class User : IEntity
+    public abstract class User : IEntity
     {
-        public User()
+        protected User()
         {
-            if(UserId==0){
+            if(Id==0){
               RecordDate = DateTime.Now;
             }
             UpdateContactDate = DateTime.Now;
             Status = true;
         }
 
-        public int UserId { get; set; }
+        public int Id { get; set; }
         public long CitizenId { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
@@ -29,8 +29,7 @@ namespace Core.Entities.Concrete
         public string Address { get; set; }
         public string Notes { get; set; }
         public DateTime UpdateContactDate { get; set; }
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public string? Role { get; set; }
 
         /// <summary>
         /// This is required when encoding token. Not in db. The default is Person.

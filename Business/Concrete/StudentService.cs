@@ -6,6 +6,7 @@ using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 
 namespace Business.Concrete;
 
@@ -48,7 +49,6 @@ public class StudentService : IStudentService
             Gender = studentRegisterDto.Gender,
             Address = studentRegisterDto.Address,
             Notes = studentRegisterDto.Notes,
-            RoleId = role.Id,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             BranchId = studentRegisterDto.BranchId,

@@ -45,14 +45,14 @@ namespace Business.Helpers
 
                 // Check or Create User
                 var userResult = await internalUserService.GetUserByEmailAsync(userEmail);
-                var userId = userResult.Data?.UserId ?? 0;
+                var userId = userResult.Data?.Id ?? 0;
 
                 if (userId == 0)
                 {
                     var createUserResult = await internalUserService.RegisterInternalUserAsync(userEmail, userPassword, userFullName);
                     if (createUserResult.Success)
                     {
-                        userId = createUserResult.Data.UserId;
+                        userId = createUserResult.Data.Id;
                     }
                     else
                     {

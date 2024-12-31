@@ -1,6 +1,7 @@
 using Business.Abstract;
 using Core.Utilities.Results;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 
 namespace Business.Concrete;
 

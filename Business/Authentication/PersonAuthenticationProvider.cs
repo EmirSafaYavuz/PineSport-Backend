@@ -55,7 +55,7 @@ namespace Business.Authentication
             var user = await _users.GetAsync(u => u.CitizenId == citizenId);
             user.AuthenticationProviderType = ProviderType.ToString();
 
-            var claims = _users.GetClaims(user.UserId);
+            var claims = _users.GetClaims(user.Id);
             var accessToken = _tokenHelper.CreateToken<PineToken>(user);
             accessToken.Provider = ProviderType;
             return accessToken;

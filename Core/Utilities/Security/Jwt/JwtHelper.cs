@@ -80,7 +80,7 @@ namespace Core.Utilities.Security.Jwt
         private static IEnumerable<Claim> SetClaims(User user)
         {
             var claims = new List<Claim>();
-            claims.AddNameIdentifier(user.UserId.ToString());
+            claims.AddNameIdentifier(user.Id.ToString());
             if (user.CitizenId > 0)
             {
                 claims.AddNameUniqueIdentifier(user.CitizenId.ToString());
@@ -93,28 +93,7 @@ namespace Core.Utilities.Security.Jwt
 
             //claims.Add(new Claim(ClaimTypes.Role, user.AuthenticationProviderType));
 
-            switch (user.RoleId)
-            {
-                case 1:
-                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-                    break;
-                case 2:
-                    claims.Add(new Claim(ClaimTypes.Role, "School"));
-                    break;
-                case 3:
-                    claims.Add(new Claim(ClaimTypes.Role, "Student"));
-                    break;
-                case 4:
-                    claims.Add(new Claim(ClaimTypes.Role, "Parent"));
-                    break;
-                case 5:
-                    claims.Add(new Claim(ClaimTypes.Role, "Trainer"));
-                    break;
-                default:
-                    claims.Add(new Claim(ClaimTypes.Role, "User"));
-                    break;
-            }
-
+            claims.Add(new Claim(ClaimTypes.Role, user.Role ?? ""));
             return claims;
         }
     }

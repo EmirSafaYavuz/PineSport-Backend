@@ -1,0 +1,1 @@
+2024-12-27 23:32:16.294 +03:00 [Error] {"ExceptionMessage":"An error occurred while saving the entity changes. See the inner exception for details.","FullName":null,"MethodName":"CreateBranch","User":"?","Parameters":[{"Name":"branchCreateDto","Value":{"Name":"Fenerbahçe Ataşehir","Address":"Ataşehir","Phone":"1234567891","SchoolId":2},"Type":"BranchCreateDto"}]}

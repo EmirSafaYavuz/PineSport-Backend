@@ -17,9 +17,9 @@ namespace DataAccess.Concrete.EntityFramework
             using var context = new ProjectDbContext();
 
             var result = (from user in context.Users
-                join userClaim in context.UserClaims on user.UserId equals userClaim.UserId
+                join userClaim in context.UserClaims on user.Id equals userClaim.UserId
                 join operationClaim in context.OperationClaims on userClaim.ClaimId equals operationClaim.Id
-                where user.UserId == userId
+                where user.Id == userId
                 select new
                 {
                     operationClaim.Name

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Dtos;
+using Entities.Dtos.Register;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +22,9 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("register")]
-        public IActionResult Register(ParentUserRegisterDto parentUserRegisterDto)
+        public IActionResult Register(ParentRegisterDto parentRegisterDto)
         {
-            var result = _parentService.RegisterParent(parentUserRegisterDto);
+            var result = _parentService.RegisterParent(parentRegisterDto);
             if (result.Success)
                 return Success(result.Message, "Parent registered successfully", result);
 
