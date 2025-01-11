@@ -11,5 +11,4 @@ public class StudentProgress : BaseEntity<int>
     public decimal Weight { get; set; }
     public DateTime RecordDate { get; set; }
     public string? TrainerNote { get; set; }
-
 }
