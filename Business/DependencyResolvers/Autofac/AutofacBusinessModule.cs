@@ -35,6 +35,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<StudentService>().As<IStudentService>();
             builder.RegisterType<TrainerService>().As<ITrainerService>();
             builder.RegisterType<SessionService>().As<ISessionService>();
+            builder.RegisterType<ProgressService>().As<IProgressService>();
+            builder.RegisterType<ReportService>().As<IReportService>();
             
             builder.RegisterType<LogRepository>().As<ILogRepository>();
             builder.RegisterType<TranslateRepository>().As<ITranslateRepository>();
@@ -46,6 +48,7 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<RoleClaimRepository>().As<IRoleClaimRepository>();
             builder.RegisterType<SessionRepository>().As<ISessionRepository>();
             builder.RegisterType<PaymentRepository>().As<IPaymentRepository>();
+            builder.RegisterType<ProgressRepository>().As<IProgressRepository>();
             
             builder.RegisterType<BranchRepository>().As<IBranchRepository>();
             builder.RegisterType<StudentRepository>().As<IStudentRepository>();
