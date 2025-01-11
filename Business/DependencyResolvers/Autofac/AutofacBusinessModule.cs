@@ -45,6 +45,7 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<RoleRepository>().As<IRoleRepository>();
             builder.RegisterType<RoleClaimRepository>().As<IRoleClaimRepository>();
             builder.RegisterType<SessionRepository>().As<ISessionRepository>();
+            builder.RegisterType<PaymentRepository>().As<IPaymentRepository>();
             
             builder.RegisterType<BranchRepository>().As<IBranchRepository>();
             builder.RegisterType<StudentRepository>().As<IStudentRepository>();

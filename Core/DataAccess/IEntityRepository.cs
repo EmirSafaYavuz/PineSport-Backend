@@ -1,11 +1,11 @@
 ﻿using Core.Entities;
-using Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Core.Entities.Concrete;
+using Core.Utilities.Results;
 
 namespace Core.DataAccess
 {
@@ -15,12 +15,24 @@ namespace Core.DataAccess
         T Add(T entity);
         T Update(T entity);
         void Delete(T entity);
+
+        // Existing method signatures
         IEnumerable<T> GetList(Expression<Func<T, bool>> expression = null);
         Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> expression = null);
-        PagingResult<T> GetListForPaging(int page, string propertyName, bool asc, Expression<Func<T, bool>> expression = null, params Expression<Func<T, object>>[] includeEntities);
-        Task<PagingResult<T>> GetListForTableSearch(TableGlobalFilter globalFilter);
         T Get(Expression<Func<T, bool>> expression);
         Task<T> GetAsync(Expression<Func<T, bool>> expression);
+
+        // Overloaded methods with includeProperties for eager loading
+        IEnumerable<T> GetList(Expression<Func<T, bool>> expression, string includeProperties);
+        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> expression, string includeProperties);
+        T Get(Expression<Func<T, bool>> expression, string includeProperties);
+        Task<T> GetAsync(Expression<Func<T, bool>> expression, string includeProperties);
+
+        // Existing methods for paging and table search
+        PagingResult<T> GetListForPaging(int page, string propertyName, bool asc, Expression<Func<T, bool>> expression = null, params Expression<Func<T, object>>[] includeEntities);
+        Task<PagingResult<T>> GetListForTableSearch(TableGlobalFilter globalFilter);
+
+        // Additional utility methods
         int SaveChanges();
         Task<int> SaveChangesAsync();
         IQueryable<T> Query();

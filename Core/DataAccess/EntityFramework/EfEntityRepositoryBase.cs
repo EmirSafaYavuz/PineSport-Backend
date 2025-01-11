@@ -45,10 +45,42 @@ namespace Core.DataAccess.EntityFramework
             return context.Set<TEntity>().FirstOrDefault(expression);
         }
 
+        public TEntity Get(Expression<Func<TEntity, bool>> expression, string includeProperties)
+        {
+            using var context = new TContext();
+            IQueryable<TEntity> query = context.Set<TEntity>();
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return query.FirstOrDefault(expression);
+        }
+
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
             using var context = new TContext();
             return await context.Set<TEntity>().FirstOrDefaultAsync(expression);
+        }
+
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression, string includeProperties)
+        {
+            using var context = new TContext();
+            IQueryable<TEntity> query = context.Set<TEntity>();
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return await query.FirstOrDefaultAsync(expression);
         }
 
         public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> expression = null)
@@ -59,12 +91,44 @@ namespace Core.DataAccess.EntityFramework
                 : context.Set<TEntity>().Where(expression).AsNoTracking().ToList();
         }
 
+        public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> expression, string includeProperties)
+        {
+            using var context = new TContext();
+            IQueryable<TEntity> query = context.Set<TEntity>();
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return expression == null ? query.AsNoTracking().ToList() : query.Where(expression).AsNoTracking().ToList();
+        }
+
         public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression = null)
         {
             using var context = new TContext();
             return expression == null
                 ? await context.Set<TEntity>().ToListAsync()
                 : await context.Set<TEntity>().Where(expression).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> expression, string includeProperties)
+        {
+            using var context = new TContext();
+            IQueryable<TEntity> query = context.Set<TEntity>();
+
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return expression == null ? await query.ToListAsync() : await query.Where(expression).ToListAsync();
         }
 
         public PagingResult<TEntity> GetListForPaging(int page, string propertyName, bool asc, Expression<Func<TEntity, bool>> expression = null, params Expression<Func<TEntity, object>>[] includeEntities)
