@@ -13,4 +13,5 @@ public interface IStudentService
     IDataResult<List<StudentDto>> GetStudents();
     IDataResult<StudentDto> UpdateStudent(StudentUpdateDto studentDto);
     IResult DeleteStudent(int studentId);
+    IDataResult<List<StudentDto>> SearchStudentsByName(string name);
 }

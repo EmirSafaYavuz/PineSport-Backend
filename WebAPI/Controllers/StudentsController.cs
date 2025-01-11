@@ -11,10 +11,12 @@ namespace WebAPI.Controllers
     public class StudentsController : BaseApiController
     {
         private readonly IStudentService _studentService;
+        private readonly ISessionService _sessionService;
 
-        public StudentsController(IStudentService studentService)
+        public StudentsController(IStudentService studentService, ISessionService sessionService)
         {
             _studentService = studentService;
+            _sessionService = sessionService;
         }
         
         [HttpGet]
@@ -52,6 +54,20 @@ namespace WebAPI.Controllers
         {
             var result = _studentService.DeleteStudent(id);
             return GetResponseOnlyResult(result);
+        }
+        
+        [HttpGet("{id}/sessions")]
+        public IActionResult GetSessionsByStudentId(int id)
+        {
+            var result = _sessionService.GetSessionsByStudentId(id);
+            return GetResponse(result); 
+        }
+        
+        [HttpGet("search")]
+        public IActionResult SearchStudents([FromQuery] string name)
+        {
+            var result = _studentService.SearchStudentsByName(name);
+            return GetResponse(result);
         }
     }
 }

@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
 using Entities.Dtos.Register;
+using Entities.Dtos.Update;
 
 namespace Business.Concrete;
 
@@ -71,6 +72,50 @@ public class SchoolService : ISchoolService
 
         var mappedSchool = _mapper.Map<SchoolDto>(school);
         return new SuccessDataResult<SchoolDto>(mappedSchool);
+    }
+
+    public IDataResult<SchoolDto> UpdateSchool(SchoolUpdateDto schoolUpdateDto)
+    {
+        var school = _schoolRepository.Get(s => s.Id == schoolUpdateDto.Id);
+        
+        if (school == null)
+        {
+            return new ErrorDataResult<SchoolDto>("School not found.");
+        }
+        
+        var result = BusinessRules.Run(
+            CheckIfSchoolNameExists(schoolUpdateDto.SchoolName)
+        );
+        
+        if (result != null)
+        {
+            return new ErrorDataResult<SchoolDto>(result.Message);
+        }
+        
+        school.SchoolName = schoolUpdateDto.SchoolName;
+        school.MobilePhones = schoolUpdateDto.MobilePhone;
+        school.Address = schoolUpdateDto.Address;
+        school.Notes = schoolUpdateDto.Notes;
+        school.Gender = schoolUpdateDto.Gender;
+        school.BirthDate = schoolUpdateDto.BirthDate;
+        
+        _schoolRepository.Update(school);
+        
+        var updatedSchoolDto = _mapper.Map<SchoolDto>(school);
+        return new SuccessDataResult<SchoolDto>(updatedSchoolDto);
+    }
+
+    public IResult DeleteSchool(int schoolId)
+    {
+        var school = _schoolRepository.Get(s => s.Id == schoolId);
+        if (school == null)
+        {
+            return new ErrorResult("School not found.");
+        }
+
+        _schoolRepository.Delete(school);
+
+        return new SuccessResult("School deleted successfully.");
     }
 
     private IResult CheckIfEmailExists(string email)

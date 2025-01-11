@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Dtos;
 using Entities.Dtos.Register;
+using Entities.Dtos.Update;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,20 @@ namespace WebAPI.Controllers
         {
             var result = _branchService.GetBranchesBySchoolId(schoolId);
             return GetResponseOnlyResultData(result);
+        }
+        
+        [HttpPut]
+        public IActionResult UpdateSchool(SchoolUpdateDto schoolUpdateDto)
+        {
+            var result = _schoolService.UpdateSchool(schoolUpdateDto);
+            return GetResponse(result);
+        }
+        
+        [HttpDelete("{schoolId}")]
+        public IActionResult DeleteSchool(int schoolId)
+        {
+            var result = _schoolService.DeleteSchool(schoolId);
+            return GetResponseOnlyResult(result);
         }
     }
 }

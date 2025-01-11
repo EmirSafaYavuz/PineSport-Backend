@@ -121,4 +121,13 @@ public class StudentService : IStudentService
         
         return new SuccessResult(Messages.UserDeleted);
     }
+
+    public IDataResult<List<StudentDto>> SearchStudentsByName(string name)
+    {
+        var students = _studentRepository.GetList(s => s.FullName.Contains(name)).ToList();
+        
+        var studentDtos = _mapper.Map<List<StudentDto>>(students);
+        
+        return new SuccessDataResult<List<StudentDto>>(studentDtos);
+    }
 }
