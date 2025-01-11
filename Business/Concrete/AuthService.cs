@@ -14,7 +14,7 @@ using Entities.Dtos;
 
 namespace Business.Concrete
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly IStudentRepository _studentRepository;
@@ -22,7 +22,7 @@ namespace Business.Concrete
         private readonly ITokenHelper _tokenHelper;
         private readonly ICacheManager _cacheManager;
 
-        public AuthenticationService(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IRoleRepository roleRepository, IStudentRepository studentRepository)
+        public AuthService(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IRoleRepository roleRepository, IStudentRepository studentRepository)
         {
             _userRepository = userRepository;
             _tokenHelper = tokenHelper;

@@ -29,45 +29,32 @@ namespace WebAPI.Controllers
             var result = _schoolService.RegisterSchool(schoolRegisterDto);
 
             if (result.Success)
-                return Success(result.Message, "School registered successfully", result);
+            {
+                return Created(result.Message, "School registered successfully", result);
+            }
 
-            return BadRequest(result.Message, result.Message, result);
+            return BadRequest(result.Message, result.Message);
         }
         
         [HttpGet]
         public IActionResult GetSchools()
         {
             var result = _schoolService.GetSchools();
-            if (result.Success)
-            {
-                return Success(result.Message, "Schools listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponseOnlyResultData(result);
         }
         
         [HttpGet("{schoolId}")]
         public IActionResult GetSchoolById(int schoolId)
         {
             var result = _schoolService.GetSchoolById(schoolId);
-            if (result.Success)
-            {
-                return Success(result.Message, "School listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponseOnlyResultData(result);
         }
         
         [HttpGet("{schoolId}/branches")]
         public IActionResult GetSchoolBranches(int schoolId)
         {
             var result = _branchService.GetBranchesBySchoolId(schoolId);
-            if (result.Success)
-            {
-                return Success(result.Message, "Branches listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponseOnlyResultData(result);
         }
     }
 }
