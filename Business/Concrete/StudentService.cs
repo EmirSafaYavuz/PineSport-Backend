@@ -7,6 +7,7 @@ using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
 
@@ -134,6 +135,15 @@ public class StudentService : IStudentService
     public IDataResult<List<StudentDto>> GetStudentsByParentId(int id)
     {
         var students = _studentRepository.GetList(s => s.ParentId == id).ToList();
+        
+        var studentDtos = _mapper.Map<List<StudentDto>>(students);
+        
+        return new SuccessDataResult<List<StudentDto>>(studentDtos);
+    }
+
+    public IDataResult<List<StudentDto>> GetStudentsByBranchId(int id)
+    {
+        var students = _studentRepository.GetList(s => s.BranchId == id).ToList();
         
         var studentDtos = _mapper.Map<List<StudentDto>>(students);
         

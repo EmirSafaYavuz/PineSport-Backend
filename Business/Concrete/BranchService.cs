@@ -4,7 +4,9 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
+using Entities.Dtos.Update;
 
 namespace Business.Concrete;
 
@@ -77,5 +79,45 @@ public class BranchService : IBranchService
         var branches = _branchRepository.GetList(b => b.SchoolId == schoolId);
         var mappedBranches = _mapper.Map<List<BranchDto>>(branches);
         return new SuccessDataResult<List<BranchDto>>(mappedBranches, "Okula ait şubeler başarıyla getirildi.");
+    }
+
+    public IDataResult<BranchDto> UpdateBranch(BranchUpdateDto branchUpdateDto)
+    {
+        var branch = _branchRepository.Get(b => b.Id == branchUpdateDto.Id);
+        if (branch == null)
+        {
+            return new ErrorDataResult<BranchDto>("Şube bulunamadı.");
+        }
+
+        var mappedBranch = _mapper.Map(branchUpdateDto, branch);
+
+        if (mappedBranch == null)
+        {
+            return new ErrorDataResult<BranchDto>("Branch bilgileri eksik veya hatalı.");
+        }
+
+        // 4. Şube Güncelleme
+        _branchRepository.Update(mappedBranch);
+
+        return new SuccessDataResult<BranchDto>(_mapper.Map<BranchDto>(mappedBranch), "Şube başarıyla güncellendi.");
+    }
+
+    public IResult DeleteBranch(int id)
+    {
+        var branch = _branchRepository.Get(b => b.Id == id);
+        if (branch == null)
+        {
+            return new ErrorResult("Şube bulunamadı.");
+        }
+
+        _branchRepository.Delete(branch);
+        return new SuccessResult("Şube başarıyla sil");
+    }
+
+    public IDataResult<List<BranchDto>> GetBranchesByTrainerId(int trainerId)
+    {
+        var branches = _branchRepository.GetBranchesByTrainerId(trainerId);
+        var mappedBranches = _mapper.Map<List<BranchDto>>(branches);
+        return new SuccessDataResult<List<BranchDto>>(mappedBranches, "Eğitmenin bağlı olduğu şubeler başarıyla getirildi.");
     }
 }

@@ -1,6 +1,6 @@
 using Core.Entities;
 
-namespace Entities.Dtos;
+namespace Entities.Dtos.BaseDto;
 
 public class BranchDto : IDto
 {

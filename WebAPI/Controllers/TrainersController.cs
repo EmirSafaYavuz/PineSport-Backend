@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Business.Abstract;
+using Entities.Dtos;
 using Entities.Dtos.Register;
-using Microsoft.AspNetCore.Http;
+using Entities.Dtos.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -13,48 +10,82 @@ namespace WebAPI.Controllers
     [ApiController]
     public class TrainersController : BaseApiController
     {
-        
         private readonly ITrainerService _trainerService;
+        private readonly ISessionService _sessionService;
+        private readonly IBranchService  _branchService;
 
-        public TrainersController(ITrainerService trainerService)
+        public TrainersController(ITrainerService trainerService, ISessionService sessionService, IBranchService branchService)
         {
             _trainerService = trainerService;
+            _sessionService = sessionService;
+            _branchService = branchService;
         }
 
+        // GET /api/trainers
         [HttpGet]
         public IActionResult GetTrainers()
         {
             var result = _trainerService.GetTrainers();
-            if (result.Success)
-            {
-                return Success(result.Message, "Trainers listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponseOnlyResultData(result);
         }
-        
+
+        // GET /api/trainers/{id}
         [HttpGet("{id}")]
         public IActionResult GetTrainerById(int id)
         {
             var result = _trainerService.GetTrainerById(id);
-            if (result.Success)
-            {
-                return Success(result.Message, "Trainer listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponseOnlyResultData(result);
         }
-        
+
+        // POST /api/trainers
         [HttpPost]
-        public IActionResult RegisterTrainer(TrainerRegisterDto trainerRegisterDto)
+        public IActionResult RegisterTrainer([FromBody] TrainerRegisterDto trainerRegisterDto)
         {
             var result = _trainerService.RegisterTrainer(trainerRegisterDto);
-            if (result.Success)
-            {
-                return Created(result.Message, "Trainer registered successfully");
-            }
+            return result.Success 
+                ? Created(result.Message, "Trainer registered successfully") 
+                : BadRequest(result.Message, result.Message);
+        }
 
-            return BadRequest(result.Message, result.Message);
+        // PUT /api/trainers/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateTrainer(int id, [FromBody] TrainerUpdateDto trainerUpdateDto)
+        {
+            trainerUpdateDto.Id = id; // Ensure the trainer ID is passed to the service layer
+            var result = _trainerService.UpdateTrainer(trainerUpdateDto);
+            return GetResponseOnlyResultData(result);
+        }
+
+        // DELETE /api/trainers/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTrainer(int id)
+        {
+            var result = _trainerService.DeleteTrainer(id);
+            return GetResponseOnlyResult(result);
+        }
+
+        // GET /api/trainers/{id}/sessions
+        [HttpGet("{id}/sessions")]
+        public IActionResult GetTrainerSessions(int id)
+        {
+            var result = _sessionService.GetSessionsByTrainerId(id);
+            return GetResponseOnlyResultData(result);
+        }
+
+        // GET /api/trainers/{id}/branches
+        [HttpGet("{id}/branches")]
+        public IActionResult GetTrainerBranches(int id)
+        {
+            var result = _branchService.GetBranchesByTrainerId(id);
+            return GetResponseOnlyResultData(result);
+        }
+
+        // GET /api/trainers/search?name={name}
+        [HttpGet("search")]
+        public IActionResult SearchTrainers([FromQuery] string name)
+        {
+            var result = _trainerService.SearchTrainersByName(name);
+            return GetResponseOnlyResultData(result);
         }
     }
 }

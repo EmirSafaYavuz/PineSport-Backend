@@ -4,6 +4,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
 

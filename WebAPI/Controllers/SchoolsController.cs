@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         public IActionResult UpdateSchool(SchoolUpdateDto schoolUpdateDto)
         {
             var result = _schoolService.UpdateSchool(schoolUpdateDto);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
         
         [HttpDelete("{schoolId}")]

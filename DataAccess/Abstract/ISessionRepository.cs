@@ -6,5 +6,8 @@ namespace DataAccess.Abstract;
 
 public interface ISessionRepository : IEntityRepository<Session>
 {
-    public List<Session> GetSessionsByStudentId(int studentId);
+    List<Session> GetSessionsByStudentId(int studentId);
+    List<Session> GetSessionsByBranchId(int branchId);
+    List<Session> GetSessionsByTrainerId(int trainerId);
+    void AssignStudentToSession(StudentSession studentSession);
 }

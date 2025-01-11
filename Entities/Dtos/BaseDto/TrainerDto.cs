@@ -1,7 +1,6 @@
 using Core.Entities;
-using Nest;
 
-namespace Entities.Dtos;
+namespace Entities.Dtos.BaseDto;
 
 public class TrainerDto : IDto
 {

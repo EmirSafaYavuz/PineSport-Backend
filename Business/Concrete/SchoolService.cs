@@ -8,6 +8,7 @@ using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
 

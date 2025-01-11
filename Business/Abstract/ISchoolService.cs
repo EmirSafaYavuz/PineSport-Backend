@@ -1,5 +1,6 @@
 using Core.Utilities.Results;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
 

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Entities.Concrete;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 
 namespace Business.Profiles;

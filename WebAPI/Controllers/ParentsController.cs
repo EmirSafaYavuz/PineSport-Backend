@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         public IActionResult GetParents()
         {
             var result = _parentService.GetParents();
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // GET /api/parents/{id}
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         public IActionResult GetParentById(int id)
         {
             var result = _parentService.GetParentById(id);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // POST /api/parents
@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
         {
             parentUpdateDto.Id = id; // Ensure ID is passed to the service layer
             var result = _parentService.UpdateParent(parentUpdateDto);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // DELETE /api/parents/{id}
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
         public IActionResult GetStudentsByParentId(int id)
         {
             var result = _studentService.GetStudentsByParentId(id);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // GET /api/parents/search?name={name}
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         public IActionResult SearchParents([FromQuery] string name)
         {
             var result = _parentService.SearchParentsByName(name);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Business.Authentication.Model;
 using Core.Utilities.Results;
 using Entities.Dtos;
+using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
 
@@ -15,4 +16,5 @@ public interface IStudentService
     IResult DeleteStudent(int studentId);
     IDataResult<List<StudentDto>> SearchStudentsByName(string name);
     IDataResult<List<StudentDto>> GetStudentsByParentId(int id);
+    IDataResult<List<StudentDto>> GetStudentsByBranchId(int id);
 }
