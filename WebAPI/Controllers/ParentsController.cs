@@ -12,11 +12,11 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParentController : BaseApiController
+    public class ParentsController : BaseApiController
     {
         private readonly IParentService _parentService;
 
-        public ParentController(IParentService parentService)
+        public ParentsController(IParentService parentService)
         {
             _parentService = parentService;
         }

@@ -11,12 +11,12 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TrainerController : BaseApiController
+    public class TrainersController : BaseApiController
     {
         
         private readonly ITrainerService _trainerService;
 
-        public TrainerController(ITrainerService trainerService)
+        public TrainersController(ITrainerService trainerService)
         {
             _trainerService = trainerService;
         }

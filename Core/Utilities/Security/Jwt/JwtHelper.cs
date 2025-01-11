@@ -79,8 +79,12 @@ namespace Core.Utilities.Security.Jwt
         }
         private static IEnumerable<Claim> SetClaims(User user)
         {
-            var claims = new List<Claim>();
-            claims.AddNameIdentifier(user.Id.ToString());
+            var claims = new List<Claim>
+            {
+                new Claim("id", user.Id.ToString()), // Explicit ID claim
+                new Claim(ClaimTypes.Role, user.Role ?? "")
+            };
+
             if (user.CitizenId > 0)
             {
                 claims.AddNameUniqueIdentifier(user.CitizenId.ToString());
@@ -91,9 +95,6 @@ namespace Core.Utilities.Security.Jwt
                 claims.AddName($"{user.FullName}");
             }
 
-            //claims.Add(new Claim(ClaimTypes.Role, user.AuthenticationProviderType));
-
-            claims.Add(new Claim(ClaimTypes.Role, user.Role ?? ""));
             return claims;
         }
     }

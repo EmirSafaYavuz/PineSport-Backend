@@ -8,6 +8,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
 using Entities.Dtos.Register;
+using Entities.Dtos.Update;
 
 namespace Business.Concrete;
 
@@ -83,5 +84,41 @@ public class StudentService : IStudentService
         var studentDtos = _mapper.Map<List<StudentDto>>(students);
         
         return new SuccessDataResult<List<StudentDto>>(studentDtos);
+    }
+
+    public IDataResult<StudentDto> UpdateStudent(StudentUpdateDto studentDto)
+    {
+        var student = _studentRepository.Get(s => s.Id == studentDto.Id);
+        
+        if (student == null)
+        {
+            return new ErrorDataResult<StudentDto>(Messages.UserNotFound);
+        }
+
+        student.FullName = studentDto.FullName;
+        student.MobilePhones = studentDto.MobilePhone;
+        student.BirthDate = studentDto.BirthDate;
+        student.Gender = studentDto.Gender;
+        student.Address = studentDto.Address;
+        student.Notes = studentDto.Notes;
+        
+        _studentRepository.Update(student);
+        
+        var updatedStudentDto = _mapper.Map<StudentDto>(student);
+        return new SuccessDataResult<StudentDto>(updatedStudentDto);
+    }
+
+    public IResult DeleteStudent(int studentId)
+    {
+        var student = _studentRepository.Get(s => s.Id == studentId);
+        
+        if (student == null)
+        {
+            return new ErrorResult(Messages.UserNotFound);
+        }
+
+        _studentRepository.Delete(student);
+        
+        return new SuccessResult(Messages.UserDeleted);
     }
 }

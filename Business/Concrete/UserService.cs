@@ -85,7 +85,7 @@ namespace Business.Concrete
         {
             return new List<SidebarMenuDto>
             {
-                new SidebarMenuDto { Title = "Ana Sayfa", Icon = "admin_panel_settings", Path = "/admin-dashboard" },
+                new SidebarMenuDto { Title = "Ana Sayfa", Icon = "admin_panel_settings", Path = "/dashboard/admin" },
                 new SidebarMenuDto { Title = "Okullar", Icon = "school", Path = "/schools" },
                 new SidebarMenuDto { Title = "Şubeler", Icon = "location_city", Path = "/branches" },
                 new SidebarMenuDto { Title = "Eğitmenler", Icon = "people", Path = "/trainers" },
@@ -101,7 +101,7 @@ namespace Business.Concrete
         {
             return new List<SidebarMenuDto>
             {
-                new SidebarMenuDto { Title = "School Dashboard", Icon = "dashboard", Path = "/app/school-dashboard" },
+                new SidebarMenuDto { Title = "School Dashboard", Icon = "dashboard", Path = "/app/dashboard/school" },
                 new SidebarMenuDto { Title = "Branches", Icon = "location_city", Path = "/app/branches" }
             };
         }

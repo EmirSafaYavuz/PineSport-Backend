@@ -28,6 +28,19 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.ManagerName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.ManagerEmail))
             .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.ManagerPhone));
+        
+        CreateMap<SchoolRegisterDto, School>()
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.MobilePhones, opt => opt.MapFrom(src => src.MobilePhone))
+            .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+            .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
+            .ForMember(dest => dest.SchoolName, opt => opt.MapFrom(src => src.SchoolName))
+            .ForMember(dest => dest.SchoolAddress, opt => opt.MapFrom(src => src.SchoolAddress))
+            .ForMember(dest => dest.SchoolPhone, opt => opt.MapFrom(src => src.SchoolPhone))
+            .ReverseMap();
 
         CreateMap<Branch, BranchDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.BranchName))

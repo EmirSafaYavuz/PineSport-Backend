@@ -26,7 +26,7 @@ namespace Business.DependencyResolvers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<AdminService>().As<IAdminService>();
-            builder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+            builder.RegisterType<AuthService>().As<IAuthService>();
             builder.RegisterType<BranchService>().As<IBranchService>();
             builder.RegisterType<ParentService>().As<IParentService>();
             builder.RegisterType<PaymentService>().As<IPaymentService>();

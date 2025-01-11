@@ -1,21 +1,18 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Dtos.Register;
-using Microsoft.AspNetCore.Http;
+using Entities.Dtos.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : BaseApiController
+    public class StudentsController : BaseApiController
     {
         private readonly IStudentService _studentService;
 
-        public StudentController(IStudentService studentService)
+        public StudentsController(IStudentService studentService)
         {
             _studentService = studentService;
         }
@@ -24,36 +21,37 @@ namespace WebAPI.Controllers
         public IActionResult GetStudents()
         {
             var result = _studentService.GetStudents();
-            if (result.Success)
-            {
-                return Success(result.Message, "Students listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponse(result);
         }
         
         [HttpGet("{id}")]
         public IActionResult GetStudentById(int id)
         {
             var result = _studentService.GetStudentById(id);
-            if (result.Success)
-            {
-                return Success(result.Message, "Student listed successfully", result.Data);
-            }
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponse(result);
         }
         
         [HttpPost]
         public IActionResult RegisterStudent(StudentRegisterDto studentRegisterDto)
         {
             var result = _studentService.RegisterStudent(studentRegisterDto);
-            if (result.Success)
-            {
-                return Created(result.Message, "Student registered successfully");
-            }
-
-            return BadRequest(result.Message, result.Message);
+            return result.Success 
+                ? Created(result.Message, "Student registered successfully") 
+                : BadRequest(result.Message, "Failed to register student");
+        }
+        
+        [HttpPut]
+        public IActionResult UpdateStudent(StudentUpdateDto studentUpdateDto)
+        {
+            var result = _studentService.UpdateStudent(studentUpdateDto);
+            return GetResponse(result);
+        }
+        
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStudent(int id)
+        {
+            var result = _studentService.DeleteStudent(id);
+            return GetResponseOnlyResult(result);
         }
     }
 }

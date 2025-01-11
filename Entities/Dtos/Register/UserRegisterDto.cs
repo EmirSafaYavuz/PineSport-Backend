@@ -1,6 +1,8 @@
-namespace Entities.Dtos;
+using Core.Entities;
 
-public class UserRegisterDto
+namespace Entities.Dtos.Register;
+
+public class UserRegisterDto : IDto
 {
     public string FullName { get; set; }
     public string Email { get; set; }

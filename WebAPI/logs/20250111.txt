@@ -1,0 +1,1 @@
+2025-01-11 21:04:57.410 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"Yağmur Yavuz","Parameters":[]}

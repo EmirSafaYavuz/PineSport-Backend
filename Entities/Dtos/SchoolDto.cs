@@ -11,4 +11,5 @@ public class SchoolDto : IDto
     public string ManagerName { get; set; }
     public string ManagerEmail { get; set; }
     public string ManagerPhone { get; set; }
+    public string Notes { get; set; }
 }

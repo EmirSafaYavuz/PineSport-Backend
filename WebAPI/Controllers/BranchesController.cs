@@ -12,11 +12,11 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BranchController : BaseApiController
+    public class BranchesController : BaseApiController
     {
         private readonly IBranchService _branchService;
 
-        public BranchController(IBranchService branchService)
+        public BranchesController(IBranchService branchService)
         {
             _branchService = branchService;
         }

@@ -9,11 +9,11 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : BaseApiController
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthService _authService;
 
-        public AuthController(IAuthenticationService authenticationService)
+        public AuthController(IAuthService authService)
         {
-            _authenticationService = authenticationService;
+            _authService = authService;
         }
 
         /// <summary>
@@ -25,12 +25,26 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto loginDto)
         {
-            var result = _authenticationService.LoginUser(loginDto);
+            var result = _authService.Login(loginDto);
 
             if (result.Success)
                 return Success("Login successful", "User logged in successfully", result.Data);
 
             return BadRequest("Login failed", result.Message, result.Data);
+        }
+        
+        [HttpGet("profile")]
+        public IActionResult GetProfile()
+        {
+            var result = _authService.GetProfile();
+            return GetResponseOnlyResultData(result);
+        }
+        
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            var result = _authService.Logout();
+            return GetResponseOnlyResultMessage(result);
         }
     }
 }
