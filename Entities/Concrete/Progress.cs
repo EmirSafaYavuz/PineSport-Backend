@@ -2,7 +2,7 @@ using Core.Entities;
 
 namespace Entities.Concrete;
 
-public class StudentProgress : BaseEntity<int>
+public class Progress : BaseEntity<int>
 {
     public int StudentId { get; set; }
     public Student Student { get; set; }

@@ -43,7 +43,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Admin> Admins { get; set; }
-        public DbSet<StudentProgress> StudentProgress { get; set; }
+        public DbSet<Progress> StudentProgress { get; set; }
         public DbSet<StudentSession> StudentSession { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Role> Roles { get; set; }

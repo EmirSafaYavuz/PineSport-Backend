@@ -13,5 +13,5 @@ public class Student : User
     
     public ICollection<StudentSession> StudentSessions { get; set; }
     public ICollection<Payment> Payments { get; set; }
-    public ICollection<StudentProgress> ProgressRecords { get; set; }
+    public ICollection<Progress> ProgressRecords { get; set; }
 }
