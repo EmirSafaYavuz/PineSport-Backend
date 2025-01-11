@@ -5,6 +5,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
 using Entities.Dtos.Register;
+using Entities.Dtos.Update;
 
 namespace Business.Concrete;
 
@@ -44,6 +45,53 @@ public class ParentService : IParentService
     public IDataResult<List<ParentDto>> GetParents()
     {
         var parents = _parentRepository.GetList().ToList();
+
+        if (!parents.Any())
+        {
+            return new ErrorDataResult<List<ParentDto>>("No parents found.");
+        }
+
+        // DTO'ya dönüştür
+        var parentDtos = _mapper.Map<List<ParentDto>>(parents);
+        return new SuccessDataResult<List<ParentDto>>(parentDtos);
+    }
+
+    public IDataResult<ParentDto> UpdateParent(ParentUpdateDto parentUpdateDto)
+    {
+        var parent = _parentRepository.Get(p => p.Id == parentUpdateDto.Id);
+
+        if (parent == null)
+        {
+            return new ErrorDataResult<ParentDto>("Parent not found.");
+        }
+
+        // DTO'dan gelen verileri entity'e ekle
+        parent.FullName = parentUpdateDto.FullName;
+        parent.Address = parentUpdateDto.Address;
+        parent.Notes = parentUpdateDto.Notes;
+        parent.Gender = parentUpdateDto.Gender;
+        parent.BirthDate = parentUpdateDto.BirthDate;
+
+        _parentRepository.Update(parent);
+        return new SuccessDataResult<ParentDto>("Parent updated successfully.");
+    }
+
+    public IResult DeleteParent(int id)
+    {
+        var parent = _parentRepository.Get(p => p.Id == id);
+
+        if (parent == null)
+        {
+            return new ErrorResult("Parent not found.");
+        }
+
+        _parentRepository.Delete(parent);
+        return new SuccessResult("Parent deleted successfully.");
+    }
+
+    public IDataResult<List<ParentDto>> SearchParentsByName(string name)
+    {
+        var parents = _parentRepository.GetList(p => p.FullName.Contains(name)).ToList();
 
         if (!parents.Any())
         {

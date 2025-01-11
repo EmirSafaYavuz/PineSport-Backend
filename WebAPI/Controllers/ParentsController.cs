@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Dtos;
 using Entities.Dtos.Register;
-using Microsoft.AspNetCore.Http;
+using Entities.Dtos.Update;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -15,40 +11,71 @@ namespace WebAPI.Controllers
     public class ParentsController : BaseApiController
     {
         private readonly IParentService _parentService;
+        private readonly IStudentService _studentService;
 
-        public ParentsController(IParentService parentService)
+        public ParentsController(IParentService parentService, IStudentService studentService)
         {
             _parentService = parentService;
+            _studentService = studentService;
         }
-        
+
+        // GET /api/parents
         [HttpGet]
         public IActionResult GetParents()
         {
             var result = _parentService.GetParents();
-            if (result.Success)
-                return Success(result.Message, "Parents listed successfully", result.Data);
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            return GetResponse(result);
         }
-        
-        [HttpGet("{parentId}")]
-        public IActionResult GetParentById(int parentId)
+
+        // GET /api/parents/{id}
+        [HttpGet("{id}")]
+        public IActionResult GetParentById(int id)
         {
-            var result = _parentService.GetParentById(parentId);
-            if (result.Success)
-                return Success(result.Message, "Parent retrieved successfully", result.Data);
-
-            return BadRequest(result.Message, result.Message, result.Data);
+            var result = _parentService.GetParentById(id);
+            return GetResponse(result);
         }
-        
+
+        // POST /api/parents
         [HttpPost]
         public IActionResult RegisterParent(ParentRegisterDto parentRegisterDto)
         {
             var result = _parentService.RegisterParent(parentRegisterDto);
-            if (result.Success)
-                return Created(result.Message, "Parent registered successfully", result);
+            return result.Success 
+                ? Created(result.Message, "Parent registered successfully") 
+                : BadRequest(result.Message, result.Message);
+        }
 
-            return BadRequest(result.Message, result.Message, result);
+        // PUT /api/parents/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateParent(int id, ParentUpdateDto parentUpdateDto)
+        {
+            parentUpdateDto.Id = id; // Ensure ID is passed to the service layer
+            var result = _parentService.UpdateParent(parentUpdateDto);
+            return GetResponse(result);
+        }
+
+        // DELETE /api/parents/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteParent(int id)
+        {
+            var result = _parentService.DeleteParent(id);
+            return GetResponseOnlyResult(result);
+        }
+
+        // GET /api/parents/{id}/students
+        [HttpGet("{id}/students")]
+        public IActionResult GetStudentsByParentId(int id)
+        {
+            var result = _studentService.GetStudentsByParentId(id);
+            return GetResponse(result);
+        }
+
+        // GET /api/parents/search?name={name}
+        [HttpGet("search")]
+        public IActionResult SearchParents([FromQuery] string name)
+        {
+            var result = _parentService.SearchParentsByName(name);
+            return GetResponse(result);
         }
     }
 }

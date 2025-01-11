@@ -1,6 +1,6 @@
 namespace Entities.Dtos.Update;
 
-public class ParentUpdateDto
+public class ParentUpdateDto : UserUpdateDto
 {
     
 }

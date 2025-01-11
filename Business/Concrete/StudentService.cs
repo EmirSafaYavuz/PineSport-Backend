@@ -130,4 +130,13 @@ public class StudentService : IStudentService
         
         return new SuccessDataResult<List<StudentDto>>(studentDtos);
     }
+
+    public IDataResult<List<StudentDto>> GetStudentsByParentId(int id)
+    {
+        var students = _studentRepository.GetList(s => s.ParentId == id).ToList();
+        
+        var studentDtos = _mapper.Map<List<StudentDto>>(students);
+        
+        return new SuccessDataResult<List<StudentDto>>(studentDtos);
+    }
 }
