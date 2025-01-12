@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Utilities.Messages;
 using FluentValidation;
@@ -42,9 +44,29 @@ namespace Core.Extensions
                 message = FormatValidationErrors(validationException);
                 statusCode = (int)HttpStatusCode.BadRequest;
             }
-            else if (e is UnauthorizedAccessException)
+            else if (e is SecurityException securityException)
             {
-                message = e.Message;
+                // SecurityException için özel format
+                var responseObject = new
+                {
+                    Error = "SecurityError",
+                    SecurityMessage = securityException.Message,
+                    StatusCode = StatusCodes.Status403Forbidden
+                };
+
+                message = JsonSerializer.Serialize(responseObject);
+                statusCode = StatusCodes.Status403Forbidden;
+            }
+            else if (e is UnauthorizedAccessException unauthorizedAccessException)
+            {
+                var responseObject = new
+                {
+                    Error = "UnauthorizedAccess",
+                    Message = unauthorizedAccessException.Message ?? "Yetkiniz yok.",
+                    StatusCode = StatusCodes.Status401Unauthorized
+                };
+
+                message = JsonSerializer.Serialize(responseObject);
                 statusCode = StatusCodes.Status401Unauthorized;
             }
             else if (e is ApplicationException)

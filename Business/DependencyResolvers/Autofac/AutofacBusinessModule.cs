@@ -11,6 +11,7 @@ using Business.Fakes.Handlers.OperationClaims;
 using Business.Fakes.Handlers.User;
 using Business.Fakes.Handlers.UserClaims;
 using Castle.DynamicProxy;
+using Core.Utilities.Helpers;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
@@ -55,6 +56,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<ParentRepository>().As<IParentRepository>();
             builder.RegisterType<SchoolRepository>().As<ISchoolRepository>();
             builder.RegisterType<TrainerRepository>().As<ITrainerRepository>();
+            
+            builder.RegisterType<UserContextHelper>().As<IUserContextHelper>().InstancePerLifetimeScope();
             
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 

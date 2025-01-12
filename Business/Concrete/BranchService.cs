@@ -1,5 +1,6 @@
 using AutoMapper;
 using Business.Abstract;
+using Business.BusinessAspects;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -7,6 +8,9 @@ using Entities.Dtos;
 using Entities.Dtos.BaseDto;
 using Entities.Dtos.Register;
 using Entities.Dtos.Update;
+using Business.Constants;
+using Core.Utilities.Helpers;
+using System.Linq.Expressions;
 
 namespace Business.Concrete;
 
@@ -15,22 +19,46 @@ public class BranchService : IBranchService
     private readonly IBranchRepository _branchRepository;
     private readonly ISchoolRepository _schoolRepository;
     private readonly IMapper _mapper;
+    private readonly IUserContextHelper _userContextHelper;
 
-    public BranchService(IBranchRepository branchRepository, IMapper mapper, ISchoolRepository schoolRepository)
+    public BranchService(IBranchRepository branchRepository, 
+        IMapper mapper, 
+        ISchoolRepository schoolRepository,
+        IUserContextHelper userContextHelper)
     {
         _branchRepository = branchRepository;
         _mapper = mapper;
         _schoolRepository = schoolRepository;
+        _userContextHelper = userContextHelper;
     }
 
     public IDataResult<List<BranchDto>> GetBranches()
     {
-        var branches = _branchRepository.GetList();
+        try
+        {
+            Expression<Func<Branch, bool>> filter = null;
 
-        var mappedBranches = _mapper.Map<List<BranchDto>>(branches);
-        return new SuccessDataResult<List<BranchDto>>(mappedBranches, "Şubeler başarıyla listelendi.");
+            if (_userContextHelper.IsInRole("school"))
+            {
+                var schoolId = _userContextHelper.GetCurrentSchoolId();
+                filter = b => b.SchoolId == schoolId;
+            }
+            else if (!_userContextHelper.IsInRole("admin"))
+            {
+                throw new UnauthorizedAccessException("Şubeleri listelemek için yetkiniz yok.");
+            }
+
+            var branches = _branchRepository.GetList(filter);
+            var branchDtos = _mapper.Map<List<BranchDto>>(branches);
+            return new SuccessDataResult<List<BranchDto>>(branchDtos, "Şubeler başarıyla listelendi.");
+        }
+        catch (Exception ex)
+        {
+            return new ErrorDataResult<List<BranchDto>>(ex.Message);
+        }
     }
 
+    [RoleRequirement("admin")]
     public IResult RegisterBranch(BranchRegisterDto branchRegisterDto)
     {
         // 1. SchoolId Kontrolü
@@ -62,6 +90,7 @@ public class BranchService : IBranchService
         return new SuccessResult("Şube başarıyla kaydedildi.");
     }
 
+    [RoleRequirement("admin")]
     public IDataResult<BranchDto> GetBranchById(int branchId)
     {
         var branch = _branchRepository.Get(b => b.Id == branchId);
@@ -81,6 +110,7 @@ public class BranchService : IBranchService
         return new SuccessDataResult<List<BranchDto>>(mappedBranches, "Okula ait şubeler başarıyla getirildi.");
     }
 
+    [RoleRequirement("admin")]
     public IDataResult<BranchDto> UpdateBranch(BranchUpdateDto branchUpdateDto)
     {
         var branch = _branchRepository.Get(b => b.Id == branchUpdateDto.Id);
@@ -102,16 +132,35 @@ public class BranchService : IBranchService
         return new SuccessDataResult<BranchDto>(_mapper.Map<BranchDto>(mappedBranch), "Şube başarıyla güncellendi.");
     }
 
+    [RoleRequirement("admin")]
     public IResult DeleteBranch(int id)
     {
-        var branch = _branchRepository.Get(b => b.Id == id);
-        if (branch == null)
+        try
         {
-            return new ErrorResult("Şube bulunamadı.");
-        }
+            var branch = _branchRepository.Get(b => b.Id == id);
+            if (branch == null)
+            {
+                return new ErrorResult("Şube bulunamadı.");
+            }
 
-        _branchRepository.Delete(branch);
-        return new SuccessResult("Şube başarıyla sil");
+            if (HasRelatedData(branch))
+            {
+                return new ErrorResult("İlişkili kayıtlar olduğu için şube silinemez.");
+            }
+
+            _branchRepository.Delete(branch);
+            return new SuccessResult("Şube başarıyla silindi.");
+        }
+        catch (Exception ex)
+        {
+            return new ErrorResult(ex.Message);
+        }
+    }
+
+    private bool HasRelatedData(Branch branch)
+    {
+        return (branch.Students != null && branch.Students.Any()) ||
+               (branch.Sessions != null && branch.Sessions.Any());
     }
 
     public IDataResult<List<BranchDto>> GetBranchesByTrainerId(int trainerId)

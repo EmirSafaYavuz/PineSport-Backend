@@ -37,7 +37,7 @@ namespace Business.BusinessAspects
             // Kullanıcının oturum açmış olup olmadığını kontrol edelim:
             if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated != true)
             {
-                throw new SecurityException("Kullanıcı oturum açmamış.");
+                throw new SecurityException("Yetkiniz yok.");
             }
 
             // Kullanıcının rollerini Claims içinden okuyalım.

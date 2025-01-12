@@ -1,6 +1,6 @@
 namespace Business.Constants;
 
-public class BranchMessages
+public static partial class Messages
 {
-    
+    public static string BranchesListed => "Branches Listed";
 }

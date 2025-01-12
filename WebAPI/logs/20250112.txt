@@ -1,0 +1,2 @@
+2025-01-12 12:08:45.047 +03:00 [Error] {"ExceptionMessage":"Şubeleri listelemek için yetkiniz yok.","FullName":null,"MethodName":"GetBranches","User":"?","Parameters":[]}
+2025-01-12 12:10:35.839 +03:00 [Error] {"ExceptionMessage":"Şubeleri listelemek için yetkiniz yok.","FullName":null,"MethodName":"GetBranches","User":"?","Parameters":[]}
