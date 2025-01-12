@@ -9,4 +9,5 @@ public interface IReportService
     IDataResult<IncomeReportDto> GetIncomeReport(DateTime startDate, DateTime endDate);
     IDataResult<AttendanceReportDto> GetAttendanceReport();
     IDataResult<RegistrationReportDto> GetNewRegistrationsReport(DateTime startDate, DateTime endDate);
+    IDataResult<AdminDashboardStatsDto> GetAdminDashboardStats();
 }

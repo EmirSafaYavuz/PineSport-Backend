@@ -26,11 +26,8 @@ namespace WebAPI.Controllers
         public IActionResult Login([FromBody] LoginDto loginDto)
         {
             var result = _authService.Login(loginDto);
-
-            if (result.Success)
-                return Success("Login successful", "User logged in successfully", result.Data);
-
-            return BadRequest("Login failed", result.Message, result.Data);
+            
+            return GetResponseOnlyResultData(result);
         }
         
         [HttpGet("profile")]

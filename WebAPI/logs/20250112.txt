@@ -1,2 +1,14 @@
 2025-01-12 12:08:45.047 +03:00 [Error] {"ExceptionMessage":"Şubeleri listelemek için yetkiniz yok.","FullName":null,"MethodName":"GetBranches","User":"?","Parameters":[]}
 2025-01-12 12:10:35.839 +03:00 [Error] {"ExceptionMessage":"Şubeleri listelemek için yetkiniz yok.","FullName":null,"MethodName":"GetBranches","User":"?","Parameters":[]}
+2025-01-12 16:19:37.799 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:09.180 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:13.097 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:35.470 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:44.552 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:44.552 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 16:40:49.614 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 17:11:55.776 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 17:19:23.912 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 17:19:23.912 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 18:24:47.481 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}
+2025-01-12 18:24:51.046 +03:00 [Error] {"ExceptionMessage":"User ID not found in claims.","FullName":null,"MethodName":"GetProfile","User":"?","Parameters":[]}

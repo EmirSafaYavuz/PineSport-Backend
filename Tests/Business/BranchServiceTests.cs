@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Constants;
 using Core.Utilities.Helpers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -97,7 +98,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeFalse();
-        result.Message.Should().Be("Belirtilen okul mevcut değil.");
+        result.Message.Should().Be(Messages.SchoolNotFound);
     }
 
     [Test]
@@ -121,7 +122,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeFalse();
-        result.Message.Should().Be("Bu isimde bir şube zaten mevcut.");
+        result.Message.Should().Be(Messages.BranchAlreadyExists);
     }
 
     [Test]
@@ -137,7 +138,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeFalse();
-        result.Message.Should().Be("Şube bulunamadı.");
+        result.Message.Should().Be(Messages.BranchNotFound);
     }
 
     [Test]
@@ -159,7 +160,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeFalse();
-        result.Message.Should().Be("İlişkili kayıtlar olduğu için şube silinemez.");
+        result.Message.Should().Be(Messages.BranchHasRelatedRecords);
     }
 
     [Test]
@@ -192,7 +193,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Message.Should().Be("Şube başarıyla kaydedildi.");
+        result.Message.Should().Be(Messages.BranchRegistered);
         _branchRepositoryMock.Verify(x => x.Add(It.IsAny<Branch>()), Times.Once);
     }
 
@@ -373,7 +374,7 @@ public class BranchServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Message.Should().Be("Şube başarıyla silindi.");
+        result.Message.Should().Be(Messages.BranchDeleted);
         _branchRepositoryMock.Verify(x => x.Delete(It.IsAny<Branch>()), Times.Once);
     }
 }

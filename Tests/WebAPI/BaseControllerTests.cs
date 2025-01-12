@@ -135,7 +135,7 @@ public abstract class BaseControllerTests<TDto, TCreateDto, TUpdateDto> : BaseIn
         var response = await ExecutePostRequest(token, createDto);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 
     [Test]

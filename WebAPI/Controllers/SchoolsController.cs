@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost]
-        public IActionResult Register([FromBody] SchoolRegisterDto schoolRegisterDto)
+        public IActionResult Register(SchoolRegisterDto schoolRegisterDto)
         {
             var result = _schoolService.RegisterSchool(schoolRegisterDto);
 
@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
                 return Created(result.Message, "School registered successfully", result);
             }
 
-            return BadRequest(result.Message, result.Message);
+            return GetResponseOnlyResult(result);
         }
         
         [HttpGet]

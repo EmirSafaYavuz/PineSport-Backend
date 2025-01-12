@@ -41,12 +41,15 @@ namespace WebAPI.Controllers
 
         // POST /api/branches
         [HttpPost]
-        public IActionResult Register([FromBody] BranchRegisterDto branchRegisterDto)
+        public IActionResult Register(BranchRegisterDto branchRegisterDto)
         {
             var result = _branchService.RegisterBranch(branchRegisterDto);
-            return result.Success 
-                ? Created(result.Message, "Branch registered successfully") 
-                : BadRequest(result.Message, result.Message);
+            if (result.Success)
+            {
+                return Created(result.Message, "Branch registered successfully", result);
+            }
+
+            return GetResponseOnlyResult(result);
         }
 
         // PUT /api/branches/{id}

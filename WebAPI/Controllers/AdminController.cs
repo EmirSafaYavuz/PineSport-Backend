@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
             var result = _adminService.RegisterAdmin(adminRegisterDto);
 
             if (result.Success)
-                return Success(result.Message, "Admin registered successfully", result);
+                return Created(result.Message, "Admin registered successfully", result);
 
-            return BadRequest(result.Message, result.Message, result);
+            return GetResponseOnlyResult(result);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         public IActionResult GetStudentReport()
         {
             var result = _reportService.GetStudentReport();
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // GET /api/reports/income?startDate={start}&endDate={end}
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         public IActionResult GetIncomeReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             var result = _reportService.GetIncomeReport(startDate, endDate);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // GET /api/reports/attendance
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAttendanceReport()
         {
             var result = _reportService.GetAttendanceReport();
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
         }
 
         // GET /api/reports/new-registrations?startDate={start}&endDate={end}
@@ -43,7 +43,15 @@ namespace WebAPI.Controllers
         public IActionResult GetNewRegistrationsReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             var result = _reportService.GetNewRegistrationsReport(startDate, endDate);
-            return GetResponse(result);
+            return GetResponseOnlyResultData(result);
+        }
+
+        // GET /api/reports/admin-dashboard-stats
+        [HttpGet("admin-dashboard-stats")]
+        public IActionResult GetAdminDashboardStats()
+        {
+            var result = _reportService.GetAdminDashboardStats();
+            return GetResponseOnlyResultData(result);
         }
     }
 }

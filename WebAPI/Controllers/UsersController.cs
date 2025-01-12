@@ -23,12 +23,7 @@ namespace WebAPI.Controllers
         public IActionResult GetSidebarMenu()
         {
             var result = _userService.GetSidebarMenu();
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
+            return GetResponseOnlyResultData(result);
         }
     }
 }
